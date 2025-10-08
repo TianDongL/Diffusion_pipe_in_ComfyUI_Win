@@ -1,0 +1,78 @@
+{
+    "training": {
+        "master_seed": 0,
+        "cache_minibatch": 8,
+        "train_minibatch": 8,
+        "offload_param_count": 5000000000,
+        "lr": 4e-05,
+        "weight_decay": 0.0,
+        "warmup_steps": 1,
+        "change_layer_every": 10000000,
+        "trained_blocks": 26,
+        "save_every": 50,
+        "save_folder": "testing",
+        "wandb_key": null,
+        "wandb_project": null,
+        "wandb_run": "chroma",
+        "wandb_entity": null,
+        "hf_repo_id": null,
+        "hf_token": null
+    },
+    "inference": {
+        "inference_every": 50,
+        "inference_folder": "lumina_inference_output",
+        "steps": 20,
+        "cfg": 5,
+        "prompts": [
+            "You are an assistant designed to generate high-quality images with the highest degree of image-text alignment based on textual prompts. <Prompt Start> a cute cat sat on a mat while receiving a head pat from his owner called Matt",
+            "You are an assistant designed to generate high-quality images with the highest degree of image-text alignment based on textual prompts. <Prompt Start> baked potato, on the space floating orbiting around the earth"
+        ],
+        "first_n_steps_wo_cfg": 0,
+        "image_dim": [
+            1024,
+            1024
+        ],
+        "gemma_max_length": 256
+    },
+    "extra_inference_config":[
+        {
+            "inference_every": 50,
+            "inference_folder": "lumina_inference_output",
+            "steps": 20,
+            "cfg": 6,
+            "prompts": [
+                "You are an assistant designed to generate high-quality images with the highest degree of image-text alignment based on textual prompts. <Prompt Start> a cute cat sat on a mat while receiving a head pat from his owner called Matt",
+                "You are an assistant designed to generate high-quality images with the highest degree of image-text alignment based on textual prompts. <Prompt Start> baked potato, on the space floating orbiting around the earth"
+            ],
+            "first_n_steps_wo_cfg": 0,
+            "image_dim": [
+                1024,
+                1024
+            ],
+            "gemma_max_length": 256
+        }
+    ],
+    "dataloader": {
+        "batch_size": 1024,
+        "jsonl_metadata_path": "test_training_data.jsonl",
+        "image_folder_path": "furry_50k_4o/images",
+        "base_resolution": [
+            512
+        ],
+        "shuffle_tags": true,
+        "tag_drop_percentage": 0.0,
+        "uncond_percentage": 0.0,
+        "resolution_step": 64,
+        "num_workers": 2,
+        "prefetch_factor": 2,
+        "ratio_cutoff": 2.0,
+        "thread_per_worker": 4
+    },
+    "model": {
+        "lumina_path": "models/lumina.sft",
+        "vae_path": "models/flux/ae.safetensors",
+        "gemma_path": "models/gemma-2-2b",
+        "gemma_to_8bit": true,
+        "gemma_max_length": 256
+    }
+}

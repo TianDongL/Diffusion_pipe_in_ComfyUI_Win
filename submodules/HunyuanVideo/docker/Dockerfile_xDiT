@@ -1,0 +1,41 @@
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-dev \
+    git \
+    wget \
+    bzip2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh \
+    && bash /tmp/miniconda.sh -b -p /opt/conda \
+    && rm /tmp/miniconda.sh
+
+# Set up environment variables for Conda
+ENV PATH="/opt/conda/bin:$PATH"
+
+# Create a new conda environment
+RUN conda create -n myenv python=3.10 -y
+
+# Activate the conda environment
+SHELL ["/bin/bash", "--login", "-c"]
+RUN echo "source activate myenv" > ~/.bashrc
+ENV PATH /opt/conda/envs/myenv/bin:$PATH
+
+# Install PyTorch and other dependencies using conda
+RUN conda install pytorch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0  pytorch-cuda=11.8 -c pytorch -c nvidia
+
+COPY ./requirements_xdit.txt /tmp/requirements_xdit.txt
+RUN pip install --no-cache-dir -r /tmp/requirements_xdit.txt
+
+# Set working directory
+WORKDIR /workspace
+
+# Default command
+CMD ["/bin/bash"]

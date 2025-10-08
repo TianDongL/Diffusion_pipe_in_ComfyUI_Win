@@ -1,0 +1,17 @@
+torch==2.6.0
+torchvision==0.21.0
+numpy
+matplotlib
+tensorboard
+torch_tb_profiler
+tqdm
+wandb
+einops
+pillow-jxl-plugin
+transformers
+safetensors
+sentencepiece
+bitsandbytes==0.45.3
+torchastic
+torch-linear-assignment
+huggingface_hub

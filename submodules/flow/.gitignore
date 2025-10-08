@@ -1,0 +1,15 @@
+/flow
+init.sh
+/.vscode
+pyrightconfig.json
+__pycache__
+*.csv
+furry_50k_4o
+datasets
+*.jpg
+*.png
+*.jsonl
+*.pth
+/models
+scribble*
+/wandb
