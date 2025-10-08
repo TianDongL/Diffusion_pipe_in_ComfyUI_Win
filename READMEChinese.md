@@ -16,6 +16,7 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 ## 你可以使用我的配置好的便携式环境包
 
 ***你仍然需要下载Microsoft MPI来为windows准备deepspeed的环境：https://www.microsoft.com/en-us/download/details.aspx?id=105289***
+
 *下载后重新启动电脑*
 
 ```bash
@@ -64,6 +65,7 @@ pip install -r requirements.txt
 ## 便携环境安装指南
 
 * 你有义务备份你的便携式环境
+
 * 我的轮子都是在Torch 2.7.1+cu128-cp311下编译的
 
 *如果你已经满足了对应的环境，跳过这步
@@ -71,8 +73,10 @@ pip install -r requirements.txt
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
 
-*直接安装必要依赖
-你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+*直接安装必要依赖*
+
+*你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```

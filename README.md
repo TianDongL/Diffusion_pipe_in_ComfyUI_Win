@@ -13,7 +13,9 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 # Quick Start
 ## You can use my pre configured portable environment pack
+
 ***You still need to download Microsoft MPI to prepare the deepspeed environment for Windows: https://www.microsoft.com/en-us/download/details.aspx?id=105289 ***
+
 *Download and restart the computer*
 
 ```bash
@@ -40,15 +42,21 @@ conda activate comfyui_DP
 ```bash
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
+
 * You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+
 ```bash
 pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
+
 * And flash-attn==2.8.1
+
 ```bash
 pip install E:/ComfyUI/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
 ```
+
 * Also bitsandbytes compiled for Windows
+
 ```bash
 pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
@@ -64,21 +72,28 @@ pip install -r requirements.txt
 * You are responsible for backing up your portable environment
 * My wheels are all compiled under Torch 2.7.1+cu128-cp311
 
-*Skip this step if you already meet the requirements
+*Skip this step if you already meet the requirements*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
 
-*Install necessary dependencies directly
-You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+*Install necessary dependencies directly*
+
+*You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
-*And flash-attn==2.8.1
+
+*And flash-attn==2.8.1*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
 ```
-*And bitsandbytes compiled for Windows
+
+*And bitsandbytes compiled for Windows*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
