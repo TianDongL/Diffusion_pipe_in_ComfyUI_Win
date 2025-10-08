@@ -78,7 +78,8 @@ pip install -r requirements.txt
 
 * 我的轮子都是在Torch 2.7.1+cu128-cp311下编译的
 
-*如果你已经满足了对应的环境，跳过这步
+*如果你已经满足了对应的环境，跳过这步*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
@@ -90,11 +91,15 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
-*和flash-attn==2.8.1
+
+*和flash-attn==2.8.1*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
 ```
-*以及为win编译的bitsandbytes
+
+*以及为win编译的bitsandbytes*
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
@@ -102,6 +107,7 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install bitsandbyte
 ```bash
 cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
 ```
+
 ```bash
 E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirements.txt
 ```
