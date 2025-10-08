@@ -58,7 +58,7 @@ pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
 
-* 还有为win编译的bitsandbytes
+*还有为win编译的bitsandbytes*
 
 ```bash
 pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
