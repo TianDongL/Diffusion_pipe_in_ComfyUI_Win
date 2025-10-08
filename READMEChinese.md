@@ -20,7 +20,7 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 ```bash
 git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win.git
-
+```
 * 如果你没有安装子模块，进行以下步骤 
 
 * 如果你不进行此步骤，训练将无法进行
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 为了让你快速开始，我提供了预配置的 ComfyUI 工作流文件：
 
-***[📋 点击导入完整工作流](./DiffusionPipeInComfyUI.json)***
+***[📋 点击导入完整工作流](./examworkflow_DP.json)***
 
 将此文件拖拽到 ComfyUI 界面中即可导入完整的训练工作流，包含所有必要的节点配置。
 
