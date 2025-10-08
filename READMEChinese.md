@@ -37,27 +37,37 @@ git submodule update
 ```bash
 conda create -n comfyui_DP python=3.11
 ```
+
 ```bash
 conda activate comfyui_DP
 ```
+
 ```bash
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
-* 你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+
+*你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases*
+
 ```bash
 pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
-* 和flash-attn==2.8.1
+
+*和flash-attn==2.8.1*
+
 ```bash
 pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
 ```
+
 * 还有为win编译的bitsandbytes
+
 ```bash
 pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
+
 ```bash
 cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
 ```
+
 ```bash
 pip install -r requirements.txt
 ```
