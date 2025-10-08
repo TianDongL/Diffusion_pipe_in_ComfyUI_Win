@@ -1,9 +1,0 @@
-diffusers
-fairscale
-accelerate
-tensorboard
-transformers
-gradio
-torchdiffeq
-click
-torchvision
