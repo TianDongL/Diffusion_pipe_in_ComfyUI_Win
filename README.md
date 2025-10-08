@@ -1,6 +1,6 @@
 # Diffusion_pipe_in_ComfyUI_Win Custom Node
 
-*click to see [中文文档](./READMEChinese.md)*
+# click to see [中文文档](./READMEChinese.md)*
 
 ## Project Overview
 
@@ -14,7 +14,7 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 # Quick Start
 ## You can use my pre configured portable environment pack
 
-***You still need to download Microsoft MPI to prepare the deepspeed environment for Windows: https://www.microsoft.com/en-us/download/details.aspx?id=105289 ***
+***You still need to download Microsoft MPI to prepare the deepspeed environment for Windows: https://www.microsoft.com/en-us/download/details.aspx?id=105289***
 
 *Download and restart the computer*
 
