@@ -11,13 +11,13 @@ torch-optimi
 tensorboard
 tqdm
 safetensors
-bitsandbytes
+# bitsandbytes
 imageio[ffmpeg]
 av
 einops
 accelerate
 loguru
-flash-attn==2.8.1
+# flash-attn==2.8.1
 omegaconf
 iopath
 termcolor

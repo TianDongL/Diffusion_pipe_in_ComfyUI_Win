@@ -12,12 +12,9 @@ import queue
 from pathlib import Path
 import platform
 
-# 尝试导入配置解析器
 try:
-    # 相对导入 (在 ComfyUI 中作为包导入时)
     from ..utils.config_parser import ConfigParser
 except ImportError:
-    # 绝对导入 (直接运行时)
     import os
     import sys
     current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +23,6 @@ except ImportError:
     try:
         from utils.config_parser import ConfigParser
     except ImportError:
-        # 如果找不到配置解析器，创建一个简单的替代
         class ConfigParser:
             @staticmethod
             def merge_configs(dataset_config, train_config):

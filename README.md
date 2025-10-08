@@ -1,122 +1,152 @@
-# Diffusion-Pipe In ComfyUI Custom Nodes
+# Diffusion_pipe_in_ComfyUI_Win Custom Node
 
- *查看[中文](./READMEChinese.md)*
+*click to see [中文文档](./READMEChinese.md)*
 
 ## Project Overview
 
-Diffusion-Pipe In ComfyUI custom nodes is a powerful extension plugin that provides complete Diffusion model training and fine-tuning functionality for ComfyUI. This project allows users to configure and launch training for various advanced AI models through ComfyUI's graphical interface, supporting both LoRA and full fine-tuning, covering the most popular image generation and video generation models.
+Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provides complete Diffusion model training and fine-tuning capabilities for ComfyUI. This project allows users to configure and launch training for various advanced AI models within ComfyUI's graphical interface, supporting both LoRA and full fine-tuning, covering the most popular image generation and video generation models available today.You can train Qwen lora with 16g Vram
 
 ***Video Demo: https://www.bilibili.com/video/BV1DAnKzTEup/?share_source=copy_web&vd_source=5a2c3d8b60d05e98a2e7f4f58f77eba5***
 
 ***[📋 View Supported Models](./docs/supported_models.md)***
 
-### I don't have much time to test each model individually, please submit an issue if you find any problems
 
 # Quick Start
-
-## Installation Guide
-
-### Installation 
-Make sure you have ComfyUI on Linux or WSL2 system, refer to https://docs.comfy.org/installation/manual_install
-
-ps: ComfyUI on WSL2 works so well that I even want to delete my ComfyUI on Windows
+## You can use my pre configured portable environment pack
+***You still need to download Microsoft MPI to prepare the deepspeed environment for Windows: https://www.microsoft.com/en-us/download/details.aspx?id=105289 ***
+*Download and restart the computer*
 
 ```bash
-conda create -n comfyui_DP python=3.12
+git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win.git
 ```
-```bash
-conda activate comfyui_DP
-```
-
-```bash
-cd ~/comfy/ComfyUI/custom_nodes/
-```
-
-```bash
-git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git
-```
-
-* If you haven't installed submodules, follow these steps 
-
-* If you don't do this step, training will not work
+* If you haven't installed the submodules, follow these steps
+* If you don't complete this step, training will not work
 
 ```bash
 git submodule init
+```
+```bash
 git submodule update
 ```
 
-# Install Dependencies
+## Conda Environment Installation Guide
+
+```bash
+conda create -n comfyui_DP python=3.11
+```
 ```bash
 conda activate comfyui_DP
 ```
-Here are the necessary dependencies for deepspeed, first install PyTorch. It is not listed in the requirements document because some GPUs sometimes require different versions of PyTorch or CUDA, and you may have to find a combination that suits your hardware.
 ```bash
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
+* You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
 ```bash
-cd ~/comfy/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI
+pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+```
+* And flash-attn==2.8.1
+```bash
+pip install E:/ComfyUI/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
+```
+* Also bitsandbytes compiled for Windows
+```bash
+pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
+```
+```bash
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
 ```
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🚀 One-Click Import Workflow
+## Portable Environment Installation Guide
 
-To get you started quickly, we provide pre-configured ComfyUI workflow files:
+* You are responsible for backing up your portable environment
+* My wheels are all compiled under Torch 2.7.1+cu128-cp311
 
-***[📋 Click to Import Complete Workflow](./DiffusionPipeInComfyUI.json)***
+*Skip this step if you already meet the requirements
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+```
 
-Drag this file into the ComfyUI interface to import the complete training workflow, including all necessary node configurations.
+*Install necessary dependencies directly
+You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+```
+*And flash-attn==2.8.1
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
+```
+*And bitsandbytes compiled for Windows
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
+```
 
-## Please read the prompts in the workflow carefully, this can help you build your dataset
+```bash
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
+```
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirements.txt
+```
+
+## 🚀 One-Click Workflow Import
+
+To get you started quickly, I've provided a pre-configured ComfyUI workflow file:
+
+***[📋 Click to Import Complete Workflow](./examworkflow_DP.json)***
+
+Simply drag this file into the ComfyUI interface to import the complete training workflow with all necessary node configurations.
+
+## Please read the prompts in the workflow carefully, as they can help you build your dataset
+
 
 # 📷 Workflow Interface Preview
 
 <div align="center">
 
-![Model Loading Nodes](./img/1.png)
+![Model Loading Node](./img/11.png)
 Models can be stored in the ComfyUI model directory
 
-![Start Training ](./img/2.png)
-*Disable Train node when debugging*
+![Launch Training and Monitoring](./img/22.png)
+*Disable the Train node when debugging*
 
-![Model Configuration](./img/3.png)
-Models can be stored in the ComfyUI model directory
+![Model Configuration](./img/33.png)
 
-![Dataset Configuration](./img/4.png)
-Recommend storing datasets in paths like Z:\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI\input\test_vid
-Recommend dataset configuration paths like Z:\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI\dataset\testdataset.toml
+
+![Dataset Configuration](./img/44.png)
 
 ![Workflow Overview](./img/55.png)
 
-![Monitoring ](./img/6.png)
+![Monitoring Options](./img/66.png)
 *kill port will stop all monitoring processes on the current port*
 
 </div>
+
 
 ### Core Features
 
 - 🎯 **Visual Training Configuration**: Graphically configure training parameters through ComfyUI nodes
 - 🚀 **Multi-Model Support**: Support for 20+ latest Diffusion models
-- 💾 **Flexible Training Methods**: Support for LoRA training and full fine-tuning
-- ⚡ **High-Performance Training**: DeepSpeed-based distributed training support
-- 📊 **Real-time Monitoring**: Integrated TensorBoard training process monitoring
-- 🔧 **WSL2 Optimization**: Specially optimized Windows WSL2 environment support
-- 🎥 **Video Training**: Support for video generation model training
-- 🖼️ **Image Editing**: Support for image editing model training
+- 💾 **Flexible Training Methods**: Support for both LoRA training and full fine-tuning
+- ⚡ **High-Performance Training**: Distributed training support based on DeepSpeed
+- 📊 **Real-Time Monitoring**: Integrated TensorBoard for monitoring training progress
+- 🎥 **Video Training**: Support for training video generation models
+- 🖼️ **Image Editing**: Support for training image editing models
 
 ## System Requirements
 
 ### Hardware Requirements
-- * I don't know, you can try :-P	
+- On Windows, it seems 16GB VRAM can train Qwen, which is quite Confusing
 
 ### Software Requirements
-- **Operating System**: Linux / Windows 10/11 + WSL2
+- **Operating System**: Windows 10/11 
 - **ComfyUI**: Latest version
+
 
 ## Supported Models
 
-This plugin supports over 20 latest Diffusion models, including:
+This plugin supports over 20 of the latest Diffusion models, including:
 
 | Model          | LoRA | Full Fine Tune | fp8/quantization |
 |----------------|------|----------------|------------------|
@@ -138,7 +168,8 @@ This plugin supports over 20 latest Diffusion models, including:
 |Qwen-Image-Edit |✅    |✅              |✅                |
 |HunyuanImage-2.1|✅    |✅              |✅                |
 
-## Node System Details
+
+## Node System Detailed Explanation
 
 ### 🗂️ Dataset Configuration Nodes
 
@@ -146,7 +177,7 @@ This plugin supports over 20 latest Diffusion models, including:
 Configure core parameters for training datasets:
 - **Input Path**: Dataset directory path
 - **Resolution Settings**: Training resolution configuration `[512]` or `[1280, 720]`
-- **Aspect Ratio Bucketing**: Automatically handle images of different ratios
+- **Aspect Ratio Bucketing**: Automatically handle images with different aspect ratios
 - **Dataset Repetition**: Control data usage frequency
 - **Cache Settings**: Optimize data loading performance
 
@@ -167,17 +198,16 @@ dataset/
 ├── source_images/
 └── target_images/
 ```
-❗source_images & target_images must have the same name
+source_images and target_images must have the same file names
 
-
-#### FrameBucketsNode (Frame Bucket Configuration)
+#### FrameBucketsNode (Frame Bucketing Configuration)
 Frame count configuration for video training:
-- Support multiple frame length training
+- Support for multiple frame length training
 - Automatic batch organization
 
-#### ArBucketsNode (Aspect Ratio Bucket Configuration)
+#### ArBucketsNode (Aspect Ratio Bucketing Configuration)
 Custom aspect ratio bucketing strategy:
-- Precise control of bucket count
+- Precise control over bucket count
 - Optimize VRAM usage
 
 ### 🤖 Model Configuration Nodes
@@ -203,10 +233,10 @@ Custom aspect ratio bucketing strategy:
 Core training parameter configuration:
 - **Training Epochs**: Control training duration
 - **Batch Size**: GPU memory optimization
-- **Learning Rate Scheduling**: Warmup and decay strategies
+- **Learning Rate Schedule**: Warmup and decay strategies
 - **Gradient Configuration**: Accumulation and clipping settings
 - **Optimizer Settings**: AdamW, AdamW8bit, etc.
-- **Memory Optimization**: Block swapping, activation checkpointing
+- **Memory Optimization**: Block swap, activation checkpointing
 
 #### ModelConfig (Model Configuration)
 Model-specific configuration:
@@ -216,7 +246,7 @@ Model-specific configuration:
 
 #### AdapterConfigNode (Adapter Configuration)
 Detailed LoRA adapter configuration:
-- **Target Modules**: Select model parts to train
+- **Target Modules**: Select which model parts to train
 - **LoRA Parameters**: rank, alpha, target dimensions
 - **Training Strategy**: Partial freezing, layered learning rates
 
@@ -229,9 +259,9 @@ Detailed optimizer settings:
 ### 🚀 Training Control Nodes
 
 #### Train (Training Launcher)
-Launch and control training process:
-- **Configuration Merging**: Automatically merge dataset and training configurations
-- **Process Management**: Start, monitor training
+Start and control the training process:
+- **Configuration Merging**: Automatically merge dataset and training configs
+- **Process Management**: Start and monitor training
 - **Error Handling**: Exception capture and recovery
 - **Log Output**: Real-time training status
 
@@ -239,30 +269,34 @@ Launch and control training process:
 Real-time training monitoring:
 - **Loss Curves**: Training and validation loss
 - **Learning Rate Tracking**: Learning rate change curves
-- **GPU Utilization**: Hardware usage
+- **GPU Utilization**: Hardware usage statistics
 - **Sample Preview**: Generated sample quality monitoring
 
 #### OutputDirPassthrough (Output Directory Passthrough)
 Utility node to simplify path passing.
 
+
 ## License
 
-This project is open source under the Apache License 2.0.
+This project is open-sourced under the Apache License 2.0.
 
-## Contributing Guide
+## Contributing
 
 Issues and Pull Requests are welcome!
 
 1. Fork the project
 2. Create a feature branch
-3. Submit changes
-4. Create a Pull Request
+3. Commit your changes
+4. Submit a Pull Request
 
 ## Acknowledgments
 
 Thanks to the following projects and teams:
 - ComfyUI team
-- Original author of Diffusion_Piped @tdrussell
+- @tdrussell, the original author of Diffusion_Piped
 - Hugging Face Diffusers
 - DeepSpeed team
-- Original authors of various models 
+- Original authors of all models
+
+
+

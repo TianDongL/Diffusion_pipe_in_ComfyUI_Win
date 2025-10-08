@@ -1,10 +1,11 @@
- # Diffusion-Pipe In ComfyUI 自定义节点
+ # Diffusion_pipe_in_ComfyUI_Win 自定义节点
 
 *click to see [English](./README.md)*
 
 ## 项目简介
 
-Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 ComfyUI 提供了完整的 Diffusion 模型训练和微调功能。这个项目允许用户在 ComfyUI 的图形界面中配置和启动各种先进 AI 模型的训练，支持 LoRA 和全量微调，涵盖了当前最热门的图像生成和视频生成模型。
+Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 ComfyUI 提供了完整的 Diffusion 模型训练和微调功能。这个项目允许用户在 ComfyUI 的图形界面中配置和启动各种先进 AI 模型的训练，支持 LoRA 和全量微调，涵盖了当前最热门的图像生成和视频生成模型。windows上16g可训练Qwen。
+
 
 ***视频演示：https://www.bilibili.com/video/BV1DAnKzTEup/?share_source=copy_web&vd_source=5a2c3d8b60d05e98a2e7f4f58f77eba5***
 
@@ -12,37 +13,83 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 
 # 快速开始
+## 你可以使用我的配置好的便携式环境包
 
-## 安装指南
-
-### 安装 
-
+***你仍然需要下载Microsoft MPI来为windows准备deepspeed的环境：https://www.microsoft.com/en-us/download/details.aspx?id=105289***
+*下载后重新启动电脑*
 
 ```bash
 git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win.git
 ```
 * 如果你没有安装子模块，进行以下步骤 
-
 * 如果你不进行此步骤，训练将无法进行
 
 ```bash
 git submodule init
+```
+```bash
 git submodule update
 ```
 
-# 安装依赖
+## conda环境安装指南
+
+```bash
+conda create -n comfyui_DP python=3.11
+```
 ```bash
 conda activate comfyui_DP
 ```
-这里是deepspeed的必要依赖，首先安装 PyTorch。它未在需求文件中列出，因为某些 GPU 有时需要不同版本的 PyTorch 或 CUDA，您可能必须找到适合您的硬件的组合。
 ```bash
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+```
+* 你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+```bash
+pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+```
+* 和flash-attn==2.8.1
+```bash
+pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+```
+* 还有为win编译的bitsandbytes
+```bash
+pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
 ```bash
 cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
 ```
 ```bash
 pip install -r requirements.txt
+```
+
+## 便携环境安装指南
+
+* 你有义务备份你的便携式环境
+* 我的轮子都是在Torch 2.7.1+cu128-cp311下编译的
+
+*如果你已经满足了对应的环境，跳过这步
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+```
+
+*直接安装必要依赖
+你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+```
+*和flash-attn==2.8.1
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install E:/ComfyUI_windows_portable/python_embeded_DP/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
+```
+*以及为win编译的bitsandbytes
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
+```
+
+```bash
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
+```
+```bash
+E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirements.txt
 ```
 
 ## 🚀 一键导入工作流
@@ -67,7 +114,7 @@ pip install -r requirements.txt
 *调试时禁用Train节点*
 
 ![模型配置](./img/33.png)
-模型可以存放在comfyui的模型目录下
+
 
 ![数据集配置](./img/44.png)
 
@@ -86,17 +133,16 @@ pip install -r requirements.txt
 - 💾 **灵活训练方式**: 支持 LoRA 训练和全量微调
 - ⚡ **高性能训练**: 基于 DeepSpeed 的分布式训练支持
 - 📊 **实时监控**: 集成 TensorBoard 监控训练过程
-- 🔧 **WSL2 优化**: 专门优化的 Windows WSL2 环境支持
 - 🎥 **视频训练**: 支持视频生成模型的训练
 - 🖼️ **图像编辑**: 支持图像编辑模型的训练
 
 ## 系统要求
 
 ### 硬件要求
-- * 我不知道，你可以尝试 :-P	
+- win上似乎16gVRAM可以训练Qwen，这让我很困惑
 
 ### 软件要求
-- **操作系统**: Windows 10/11 + WSL2
+- **操作系统**: Windows 10/11 
 - **ComfyUI**: 最新版本
 
 
