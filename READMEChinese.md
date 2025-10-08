@@ -1,6 +1,6 @@
  # Diffusion_pipe_in_ComfyUI_Win 自定义节点
 
-# click to see [English](./README.md)*
+# click to see [English](./README.md)
 
 ## 项目简介
 

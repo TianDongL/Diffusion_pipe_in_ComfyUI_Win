@@ -1,6 +1,6 @@
 # Diffusion_pipe_in_ComfyUI_Win Custom Node
 
-# click to see [中文文档](./READMEChinese.md)*
+# 点击查看 [中文文档](./READMEChinese.md)
 
 ## Project Overview
 
