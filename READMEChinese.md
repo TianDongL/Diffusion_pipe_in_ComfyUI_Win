@@ -10,32 +10,16 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 ***[📋 查看支持的模型](./docs/supported_models.md)***
 
-### 我没有太多时间逐个模型进行测试，发现问题请提交issue
 
 # 快速开始
 
 ## 安装指南
 
 ### 安装 
-确保你在Linux或者WSL2系统上拥有ComfyUI，参考https://docs.comfy.org/installation/manual_install
-
-ps:WSL2上的comfyui十分好用，我甚至想删除我在win上的comfyui
 
 
 ```bash
-conda create -n comfyui_DP python=3.12
-```
-```bash
-conda activate comfyui_DP
-```
-
-```bash
-cd ~/comfy/ComfyUI/custom_nodes/
-```
-
-```bash
-git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git
-```
+git clone --recurse-submodules https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win.git
 
 * 如果你没有安装子模块，进行以下步骤 
 
@@ -55,7 +39,7 @@ conda activate comfyui_DP
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
 ```bash
-cd ~/comfy/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
 ```
 ```bash
 pip install -r requirements.txt
@@ -86,8 +70,6 @@ pip install -r requirements.txt
 模型可以存放在comfyui的模型目录下
 
 ![数据集配置](./img/44.png)
-建议数据集存放在类似于Z:\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI\input\test_vid
-建议数据集配置路径类似于Z:\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI\dataset\testdataset.toml
 
 ![工作流总览](./img/55.png)
 
@@ -114,7 +96,7 @@ pip install -r requirements.txt
 - * 我不知道，你可以尝试 :-P	
 
 ### 软件要求
-- **操作系统**: Linux / Windows 10/11 + WSL2
+- **操作系统**: Windows 10/11 + WSL2
 - **ComfyUI**: 最新版本
 
 
