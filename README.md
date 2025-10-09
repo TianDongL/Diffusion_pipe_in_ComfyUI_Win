@@ -13,6 +13,9 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 # Quick Start
 ## You can use my pre configured portable environment pack
+```bash
+https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win
+```
 
 ***You still need to download Microsoft MPI to prepare the deepspeed environment for Windows: https://www.microsoft.com/en-us/download/details.aspx?id=105289***
 

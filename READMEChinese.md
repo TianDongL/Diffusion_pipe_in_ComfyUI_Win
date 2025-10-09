@@ -13,7 +13,10 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 
 # 快速开始
-## 你可以使用我的配置好的便携式环境包
+## 你可以使用我的配置好的便携式环境包：
+```bash
+https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win
+```
 
 ***你仍然需要下载Microsoft MPI来为windows准备deepspeed的环境：https://www.microsoft.com/en-us/download/details.aspx?id=105289***
 
