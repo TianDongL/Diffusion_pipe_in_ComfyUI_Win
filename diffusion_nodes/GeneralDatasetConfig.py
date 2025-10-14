@@ -174,13 +174,14 @@ class GeneralDatasetConfig:
             
             # 添加目录配置
             if control_path:
-                # 编辑模型配置（有control_path）
-                # 使用WSL路径规范化处理路径
+
                 normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\target\\images"
                 normalized_control_path = normalize_windows_path(control_path) if control_path else "C:\\path\\to\\control\\images"
                 config_lines.extend([
+                    "[[directory]]",
                     f"path = '{normalized_dataset_path}'",
                     f"control_path = '{normalized_control_path}'",
+                    f"num_repeats = {num_repeats}",
                 ])
             else:
                 # 通用数据集配置
