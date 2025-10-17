@@ -119,7 +119,7 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 
 为了让你快速开始，我提供了预配置的 ComfyUI 工作流文件：
 
-***[📋 点击导入完整工作流](.example_workflows/examworkflow_DP.json)***
+***[📋 点击导入完整工作流](./example_workflows/examworkflow_DP.json)***
 
 将此文件拖拽到 ComfyUI 界面中即可导入完整的训练工作流，包含所有必要的节点配置。
 
