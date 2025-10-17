@@ -210,10 +210,9 @@ class GeneralConfig:
             
             os.makedirs(abs_output_dir, exist_ok=True)
             
-            try:
-                config_output_dir = os.path.relpath(abs_output_dir, comfyui_root).replace('\\', '/')
-            except ValueError:
-                config_output_dir = abs_output_dir.replace('\\', '/')
+            # 配置文件中使用绝对路径（训练脚本需要绝对路径）
+            # 将反斜杠转换为正斜杠，确保跨平台兼容性
+            config_output_dir = abs_output_dir.replace('\\', '/')
             
             # 自动计算配置文件保存路径：custom_nodes/Diffusion_pipe_in_ComfyUI/train_config/trainconfig.toml
             config_dir = os.path.join(plugin_dir, "train_config")
@@ -233,7 +232,7 @@ class GeneralConfig:
                 "save_dtype": save_dtype,
                 "caching_batch_size": caching_batch_size,
                 "partition_method": partition_method,
-                "output_dir": config_output_dir,
+                "output_dir": config_output_dir,  # 使用绝对路径
                 "disable_block_swap_for_eval": disable_block_swap_for_eval,
             }
             
@@ -437,6 +436,7 @@ class GeneralConfig:
                 
                 # 输出配置信息到控制台
                 print(f"[Config] Saved to: {config_save_path}")
+                print(f"[Config] Output directory (absolute): {config_output_dir}")
                 print(f"[Config] Generated at: {current_time}")
                 print(f"[Config] Working directory: {current_cwd}")
                 
