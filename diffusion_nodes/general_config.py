@@ -197,24 +197,23 @@ class GeneralConfig:
                          eval_datasets: str = "", adapter_config=None, advanced_config=None) -> Tuple[str, str, str]:
         """生成通用训练设置"""
         try:
-            # 自动计算输出目录路径：custom_nodes/Diffusion_pipe_in_ComfyUI_Win/output/用户指定的文件夹名
             plugin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            base_output_dir = os.path.join(plugin_dir, "output")
+            comfyui_root = os.path.dirname(os.path.dirname(plugin_dir))
+            base_output_dir = os.path.join(comfyui_root, "output")
             
-            # 清理用户输入的文件夹名称，去除不安全的字符
             safe_folder_name = "".join(c for c in output_folder_name if c.isalnum() or c in (' ', '_', '-')).strip()
             if not safe_folder_name:
                 safe_folder_name = "train_output"
             
-            # 将用户指定的文件夹名添加到输出目录
             abs_output_dir = os.path.join(base_output_dir, safe_folder_name)
             abs_output_dir = os.path.normpath(abs_output_dir)
             
-            # 确保输出目录存在
             os.makedirs(abs_output_dir, exist_ok=True)
             
-            # 将输出目录路径转换为正斜杠格式（用于配置文件）
-            config_output_dir = abs_output_dir.replace('\\', '/')
+            try:
+                config_output_dir = os.path.relpath(abs_output_dir, comfyui_root).replace('\\', '/')
+            except ValueError:
+                config_output_dir = abs_output_dir.replace('\\', '/')
             
             # 自动计算配置文件保存路径：custom_nodes/Diffusion_pipe_in_ComfyUI/train_config/trainconfig.toml
             config_dir = os.path.join(plugin_dir, "train_config")
