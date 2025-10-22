@@ -59,6 +59,26 @@ class Train:
                     "default": "",
                     "tooltip": "从指定检查点继续训练，例如：'20250212_07-06-40' 或留空表示不从检查点恢复"
                 }),
+                "reset_dataloader": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "从检查点恢复时：勾选重置数据加载器（仅加载优化器状态，数据集从头开始）"
+                }),
+                "regenerate_cache": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "强制重新生成缓存（数据集更改后使用）"
+                }),
+                "trust_cache": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "⚡ 信任现有缓存（跳过验证，加速大数据集加载）"
+                }),
+                "cache_only": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "仅缓存模型输入然后退出（不进行训练），用于预处理数据集"
+                }),
+                "i_know_what_i_am_doing": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "跳过某些检查和覆盖（高级用户专用，可能导致训练失败）"
+                }),
             }
         }
     
@@ -67,9 +87,9 @@ class Train:
     FUNCTION = "execute"
     CATEGORY = "Diffusion-Pipe/Train"
     
-    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint=""):
+    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False):
         """ComfyUI节点的执行入口"""
-        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint)
+        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint, reset_dataloader, regenerate_cache, trust_cache, cache_only, i_know_what_i_am_doing)
     
     def normalize_windows_path(self, path):
         """规范化Windows环境下的路径"""
@@ -128,7 +148,7 @@ class Train:
             print(error_msg)
             log_queue.put(error_msg)
 
-    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint=""):
+    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False):
         """启动训练进程"""
         try:
             # 检查是否已有训练进程在运行
@@ -215,44 +235,51 @@ class Train:
                 "--deepspeed"
             ]
             
-            if train_config.get('regenerate_cache', False):
+            # 缓存相关参数（优先使用节点参数，其次使用train_config）
+            if regenerate_cache or train_config.get('regenerate_cache', False):
                 cmd.append("--regenerate_cache")
             
-            if train_config.get('trust_cache', False):
+            if trust_cache or train_config.get('trust_cache', False):
                 cmd.append("--trust_cache")
-                
-            if 'master_port' in train_config:
-                cmd.extend(["--master_port", str(train_config['master_port'])])
             
             # 添加从检查点恢复训练的参数
             if resume_from_checkpoint and resume_from_checkpoint.strip():
                 cmd.extend(["--resume_from_checkpoint", resume_from_checkpoint.strip()])
             
-            # 处理高级配置中的命令行参数
+            # 添加 reset_dataloader 参数
+            if reset_dataloader:
+                cmd.append("--reset_dataloader")
+            
+            # 添加 cache_only 参数
+            if cache_only:
+                cmd.append("--cache_only")
+            
+            # 添加 i_know_what_i_am_doing 参数
+            if i_know_what_i_am_doing:
+                cmd.append("--i_know_what_i_am_doing")
+            
+            # 处理高级配置中的命令行参数（向后兼容，但节点参数优先）
             train_cmd_args = train_config.get('_train_cmd_args', {})
             if train_cmd_args:
-                # resume_from_checkpoint 参数
-                if 'resume_from_checkpoint' in train_cmd_args:
+                # resume_from_checkpoint 参数（仅在节点未提供时使用）
+                if 'resume_from_checkpoint' in train_cmd_args and not resume_from_checkpoint:
                     resume_value = train_cmd_args['resume_from_checkpoint']
                     if isinstance(resume_value, bool) and resume_value:
                         cmd.append("--resume_from_checkpoint")
                     elif isinstance(resume_value, str):
                         cmd.extend(["--resume_from_checkpoint", resume_value])
                 
-                # 布尔型参数
-                bool_args = ['reset_dataloader', 'regenerate_cache', 'cache_only', 
-                           'trust_cache', 'i_know_what_i_am_doing']
+                # 布尔型参数（仅在节点未启用时从_train_cmd_args读取）
+                # regenerate_cache 和 trust_cache 已由节点参数处理，这里不重复
+                bool_args = ['reset_dataloader', 'cache_only', 'i_know_what_i_am_doing']
                 for arg in bool_args:
                     if train_cmd_args.get(arg, False):
-                        cmd.append(f"--{arg}")
+                        # 避免重复添加（节点参数已处理的情况）
+                        if f"--{arg}" not in cmd:
+                            cmd.append(f"--{arg}")
                 
-                # master_port 参数（如果高级配置中有，优先使用）
+                # master_port 参数（仅从 _train_cmd_args 配置）
                 if 'master_port' in train_cmd_args:
-                    # 移除之前添加的master_port参数
-                    if "--master_port" in cmd:
-                        idx = cmd.index("--master_port")
-                        cmd.pop(idx)  # 移除 --master_port
-                        cmd.pop(idx)  # 移除 端口值
                     cmd.extend(["--master_port", str(train_cmd_args['master_port'])])
                 
                 # dump_dataset 参数

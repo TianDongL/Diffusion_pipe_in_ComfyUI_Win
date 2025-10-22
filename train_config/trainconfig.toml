@@ -1,9 +1,9 @@
-epochs = 190
+epochs = 192
 micro_batch_size_per_gpu = 1
 gradient_accumulation_steps = 1
 pipeline_stages = 1
 warmup_steps = 0
-blocks_to_swap = 0
+blocks_to_swap = 40
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
@@ -27,7 +27,6 @@ gradient_release = false
 [model]
 type = 'qwen_image'
 diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusers/Qwen-Image'
-transformer_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/qwen_edit/qwen_image_edit_bf16.safetensors'
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
 transformer_dtype = 'float8'

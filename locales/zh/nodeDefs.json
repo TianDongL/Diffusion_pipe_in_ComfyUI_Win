@@ -682,6 +682,26 @@
       "resume_from_checkpoint": {
         "name": "从检查点恢复",
         "tooltip": "从指定检查点继续训练，例如：'20250928_03-05-30' 或留空表示开始新训练"
+      },
+      "reset_dataloader": {
+        "name": "重置数据加载器",
+        "tooltip": "从检查点恢复时：勾选重置数据加载器（仅加载优化器状态，数据集从头开始）"
+      },
+      "regenerate_cache": {
+        "name": "强制重新生成缓存",
+        "tooltip": "强制重新生成缓存（数据集更改后使用）"
+      },
+      "trust_cache": {
+        "name": "信任现有缓存",
+        "tooltip": "信任现有缓存（跳过验证，加速大数据集加载）"
+      },
+      "cache_only": {
+        "name": "仅缓存模式",
+        "tooltip": "仅缓存模型输入然后退出（不进行训练），用于预处理数据集"
+      },
+      "i_know_what_i_am_doing": {
+        "name": "跳过检查",
+        "tooltip": "跳过某些检查和覆盖（高级用户专用，可能导致训练失败）"
       }
     },
     "outputs": {

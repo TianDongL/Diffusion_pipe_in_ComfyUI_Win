@@ -682,6 +682,26 @@
       "resume_from_checkpoint": {
         "name": "Resume From Checkpoint",
         "tooltip": "Resume training from specified checkpoint, e.g. '20250928_03-05-30' or leave empty for new training"
+      },
+      "reset_dataloader": {
+        "name": "Reset Dataloader",
+        "tooltip": "When resuming from checkpoint: check to reset dataloader (only load optimizer state, dataset starts from beginning)"
+      },
+      "regenerate_cache": {
+        "name": "Regenerate Cache",
+        "tooltip": "Force regenerate cache (use after dataset changes)"
+      },
+      "trust_cache": {
+        "name": "Trust Cache",
+        "tooltip": "⚡ Trust existing cache (skip validation, speeds up large dataset loading)"
+      },
+      "cache_only": {
+        "name": "Cache Only",
+        "tooltip": "Only cache model inputs then exit (no training), used for dataset preprocessing"
+      },
+      "i_know_what_i_am_doing": {
+        "name": "I Know What I Am Doing",
+        "tooltip": "Skip certain checks and overrides (for advanced users, may cause training failure)"
       }
     },
     "outputs": {
