@@ -69,7 +69,7 @@ class Train:
                 }),
                 "trust_cache": ("BOOLEAN", {
                     "default": False,
-                    "tooltip": "⚡ 信任现有缓存（跳过验证，加速大数据集加载）"
+                    "tooltip": "信任现有缓存（跳过验证，加速大数据集加载）"
                 }),
                 "cache_only": ("BOOLEAN", {
                     "default": False,
