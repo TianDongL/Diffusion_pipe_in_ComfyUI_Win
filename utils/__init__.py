@@ -1,1 +1,2 @@
-# Utils package for Diffusion Pipe in ComfyUI 
+# Utils module for Diffusion Pipe training
+

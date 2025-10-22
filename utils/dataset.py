@@ -8,6 +8,7 @@ import hashlib
 import json
 import tarfile
 from inspect import signature
+import platform
 
 import numpy as np
 import torch
@@ -26,8 +27,8 @@ from utils.common import is_main_process, VIDEO_EXTENSIONS, round_to_nearest_mul
 
 DEBUG = False
 IMAGE_SIZE_ROUND_TO_MULTIPLE = 32
-# 在Windows下设置为1以避免多进程序列化问题
-NUM_PROC = 1 if os.name == 'nt' else min(8, os.cpu_count())
+# Disable multiprocessing on Windows to avoid pickle serialization errors
+NUM_PROC = 1 if platform.system() == 'Windows' else min(8, os.cpu_count())
 CAPTIONS_JSON_FILE = 'captions.json'
 ROUND_DECIMAL_DIGITS = 3
 
@@ -413,7 +414,7 @@ class DirectoryDataset:
             all_grouped_metadata_exists = False
             unique_grouping_keys = None
             if self.grouping_keys_json_file.exists():
-                with open(self.grouping_keys_json_file) as f:
+                with open(self.grouping_keys_json_file, encoding='utf-8') as f:
                     unique_grouping_keys = json.load(f)
                 if self.use_size_buckets and not all(len(key) == 3 for key in unique_grouping_keys):
                     # Using size buckets but have AR keys.
@@ -488,7 +489,7 @@ class DirectoryDataset:
                 grouped_cache_dir = self.cache_dir / f'metadata/grouped_metadata_{bucket_suffix(ar_bucket)}'
                 metadata.save_to_disk(str(grouped_cache_dir))
 
-        with open(self.grouping_keys_json_file, 'w') as f:
+        with open(self.grouping_keys_json_file, 'w', encoding='utf-8') as f:
             json.dump(unique_grouping_keys, f)
 
         return unique_grouping_keys
@@ -554,7 +555,7 @@ class DirectoryDataset:
 
             if captions_json.exists():
                 print('Loading captions JSON')
-                with open(captions_json) as f:
+                with open(captions_json, encoding='utf-8') as f:
                     caption_data = json.load(f)
 
                 def add_captions(example):
@@ -618,13 +619,8 @@ class DirectoryDataset:
                 # Already put in dataset from captions.json file.
                 captions = example['caption'][0]
             if captions is None and caption_file:
-                try:
-                    with open(caption_file, 'r', encoding='utf-8') as f:
-                        captions = [f.read().strip()]
-                except UnicodeDecodeError:
-                    # 如果UTF-8失败，尝试使用系统默认编码
-                    with open(caption_file, 'r', encoding='gbk') as f:
-                        captions = [f.read().strip()]
+                with open(caption_file, encoding='utf-8') as f:
+                    captions = [f.read().strip()]
             if captions is None:
                 captions = ['']
                 logger.warning(f'Cound not find caption for {image_file}. Using empty caption.')
@@ -1025,21 +1021,100 @@ class DatasetManager:
     # Mix and match native multiprocessing / torch.multiprocessing and multiprocess at your peril! Things can break.
     # In patches.py we register reductions so Tensors sent over Queues and Pipes are efficient just like in torch.multiprocessing.
     def cache(self, unload_models=True):
-        # 修改为单进程模式以避免Windows下的序列化问题
-        if is_main_process():
-            self._cache_single_process()
+        import platform
+        
+        # On Windows, multiprocessing with spawn mode has severe limitations with pickling
+        # complex objects. We run caching in the main process instead.
+        is_windows = platform.system() == 'Windows'
+        
+        if not is_windows:
+            # Original Unix/Linux approach using separate process and broadcast
+            if is_main_process():
+                manager = mp.Manager()
+                queue = [manager.Queue()]
+            else:
+                queue = [None]
+            torch.distributed.broadcast_object_list(queue, src=0, group=dist.get_world_group())
+            queue = queue[0]
 
-        if unload_models:
-            # Free memory in all unneeded submodels. This is easier than trying to delete every reference.
-            # TODO: check if this is actually freeing memory.
-            for model in self.submodels:
-                if self.model.name == 'sdxl' and model is self.vae:
-                    # If full fine tuning SDXL, we need to keep the VAE weights around for saving the model.
-                    model.to('cpu')
-                else:
-                    model.to('meta')
+            # start up a process to run through the dataset caching flow
+            if is_main_process():
+                process = mp.Process(
+                    target=_cache_fn,
+                    args=(
+                        self.datasets,
+                        queue,
+                        self.model.get_preprocess_media_file_fn(),
+                        len(self.text_encoders),
+                        self.regenerate_cache,
+                        self.trust_cache,
+                        self.caching_batch_size,
+                    )
+                )
+                process.start()
 
-        dist.barrier()
+            # loop on the original processes (one per GPU) to handle tasks requiring GPU models (VAE, text encoders)
+            while True:
+                task = queue.get()
+                if task is None:
+                    # Propagate None so all worker processes break out of this loop.
+                    # This is safe because it's a FIFO queue. The first None always comes after all work items.
+                    queue.put(None)
+                    break
+                self._handle_task(task)
+
+            if unload_models:
+                # Free memory in all unneeded submodels. This is easier than trying to delete every reference.
+                # TODO: check if this is actually freeing memory.
+                for model in self.submodels:
+                    if self.model.name == 'sdxl' and model is self.vae:
+                        # If full fine tuning SDXL, we need to keep the VAE weights around for saving the model.
+                        model.to('cpu')
+                    else:
+                        model.to('meta')
+
+            dist.barrier()
+            if is_main_process():
+                process.join()
+        else:
+            # Windows-specific approach: run caching in main process without multiprocessing
+            # This avoids pickle issues but only works with single-GPU training
+            if is_main_process():
+                # Call the caching function directly in the main process
+                # We create a simple queue-like interface that directly calls _handle_task
+                class DirectQueue:
+                    def __init__(self, handler):
+                        self.handler = handler
+                    
+                    def put(self, item):
+                        if item is not None:
+                            self.handler(item)
+                    
+                    def get(self):
+                        raise NotImplementedError("DirectQueue.get() should not be called")
+                
+                queue = DirectQueue(self._handle_task)
+                
+                # Run caching function directly (not in a subprocess)
+                _cache_fn(
+                    self.datasets,
+                    queue,
+                    self.model.get_preprocess_media_file_fn(),
+                    len(self.text_encoders),
+                    self.regenerate_cache,
+                    self.trust_cache,
+                    self.caching_batch_size,
+                )
+                
+                if unload_models:
+                    for model in self.submodels:
+                        if self.model.name == 'sdxl' and model is self.vae:
+                            model.to('cpu')
+                        else:
+                            model.to('meta')
+            
+            # Barrier to sync all processes (even though only main process does work on Windows)
+            dist.barrier()
 
         # Now load all datasets from cache.
         for ds in self.datasets:
@@ -1083,106 +1158,6 @@ class DatasetManager:
             else:
                 cpu_results[k] = v.to('cpu')
         pipe.send(cpu_results)
-
-    def _cache_single_process(self):
-        """单进程缓存模式，避免Windows下的多进程序列化问题"""
-        # 缓存元数据
-        for ds in self.datasets:
-            ds.cache_metadata(regenerate_cache=self.regenerate_cache, trust_cache=self.trust_cache)
-
-        # 缓存潜在表示
-        def latents_map_fn_single(example, rank=0):
-            is_edit_dataset = ('control_file' in example)
-            first_size_bucket = example['size_bucket'][0]
-            tensors_and_masks = []
-            image_specs = []
-            captions = []
-            control_tensors_and_masks = []
-            
-            for i, (image_spec, mask_path, size_bucket, caption) in enumerate(
-                zip(example['image_spec'], example['mask_file'], example['size_bucket'], example['caption'])
-            ):
-                assert size_bucket == first_size_bucket
-                items = self.model.get_preprocess_media_file_fn()(image_spec, mask_path, size_bucket)
-                tensors_and_masks.extend(items)
-                image_specs.extend([image_spec] * len(items))
-                captions.extend([caption] * len(items))
-                if is_edit_dataset:
-                    control_file = example['control_file'][i]
-                    control_items = self.model.get_preprocess_media_file_fn()((None, control_file), None, size_bucket)
-                    assert len(control_items) == 1
-                    assert len(items) == 1
-                    control_tensors_and_masks.append(control_items[0])
-                else:
-                    control_tensors_and_masks.append(None)
-
-            if len(tensors_and_masks) == 0:
-                assert not is_edit_dataset
-                return {'latents': [], 'mask': [], 'image_spec': [], 'caption': []}
-
-            caching_batch_size = len(example['image_spec'])
-            results = defaultdict(list)
-            
-            # 确保VAE在GPU上
-            if next(self.vae.parameters()).device.type != 'cuda':
-                self.vae.to('cuda')
-                
-            for i in range(0, len(tensors_and_masks), caching_batch_size):
-                tensor = torch.stack([t[0] for t in tensors_and_masks[i:i+caching_batch_size]])
-                c_tensor = torch.stack([t[0] for t in control_tensors_and_masks[i:i+caching_batch_size]]) if is_edit_dataset else None
-                
-                # 直接调用VAE处理
-                if c_tensor is not None:
-                    result = self.call_vae_fn(tensor, c_tensor)
-                else:
-                    result = self.call_vae_fn(tensor)
-                    
-                for k, v in result.items():
-                    results[k].append(v.to('cpu'))
-                    
-            # 连接结果
-            for k, v in results.items():
-                results[k] = torch.cat(v)
-            results['image_spec'] = image_specs
-            results['mask'] = [t[1] for t in tensors_and_masks]
-            results['caption'] = captions
-            return results
-
-        for ds in self.datasets:
-            ds.cache_latents(latents_map_fn_single, regenerate_cache=self.regenerate_cache, trust_cache=self.trust_cache, caching_batch_size=self.caching_batch_size)
-
-        # 缓存文本嵌入
-        for text_encoder_idx in range(len(self.text_encoders)):
-            def text_embedding_map_fn_single(example, rank=0):
-                # 确保文本编码器在GPU上
-                te_idx = text_encoder_idx
-                if next(self.text_encoders[te_idx].parameters()).device.type != 'cuda':
-                    # 将其他模型移到CPU
-                    for i, submodel in enumerate(self.submodels):
-                        if i != te_idx + 1:  # +1因为VAE是索引0
-                            submodel.to('cpu')
-                    self.text_encoders[te_idx].to('cuda')
-                
-                control_file = example['control_file'] if 'control_file' in example else None
-                args = [example['caption'], example['is_video']]
-                if self.te_fn_requires_control_file[te_idx]:
-                    args.append(control_file)
-                    
-                result = self.call_text_encoder_fns[te_idx](*args)
-                
-                # 移到CPU
-                cpu_result = {}
-                for k, v in result.items():
-                    if isinstance(v, (list, tuple)):
-                        cpu_result[k] = [x.to('cpu') for x in v]
-                    else:
-                        cpu_result[k] = v.to('cpu')
-                        
-                cpu_result['image_spec'] = example['image_spec']
-                return cpu_result
-                
-            for ds in self.datasets:
-                ds.cache_text_embeddings(text_embedding_map_fn_single, text_encoder_idx+1, regenerate_cache=self.regenerate_cache, caching_batch_size=self.caching_batch_size)
 
 
 def split_batch(batch, pieces):

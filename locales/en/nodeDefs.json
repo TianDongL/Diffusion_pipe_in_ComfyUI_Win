@@ -23,10 +23,6 @@
         "name": "Micro Batch Size Per GPU",
         "tooltip": "Micro batch size per GPU"
       },
-      "number_of_gpus": {
-        "name": "Number of GPUs",
-        "tooltip": "Number of GPUs"
-      },
       "pipeline_stages": {
         "name": "Pipeline Stages",
         "tooltip": "Number of pipeline parallel stages, number of GPUs to split the model across, should match GPU count"

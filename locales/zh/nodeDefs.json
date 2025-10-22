@@ -23,10 +23,6 @@
         "name": "每GPU微批次大小",
         "tooltip": "每个GPU的微批次大小"
       },
-      "number_of_gpus": {
-        "name": "GPU数量",
-        "tooltip": "GPU 数量"
-      },
       "pipeline_stages": {
         "name": "管道并行阶段数",
         "tooltip": "管道并行阶段数，将模型拆分到的 GPU 数量，应与 GPU 数量匹配"

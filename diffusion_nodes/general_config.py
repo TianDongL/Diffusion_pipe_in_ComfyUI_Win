@@ -68,30 +68,24 @@ class GeneralConfig:
                     "max": 32,
                     "tooltip": "每个GPU的微批次大小"
                 }),
-                "number_of_gpus": ("INT", {
-                    "default": 1, 
-                    "min": 1, 
-                    "max": 8,
-                    "tooltip": "GPU 数量"
-                }),
                 "pipeline_stages": ("INT", {
                     "default": 1, 
                     "min": 1, 
                     "max": 8,
-                    "tooltip": "管道并行阶段数，将模型拆分到的 GPU 数量，应与 GPU 数量匹配"
+                    "tooltip": "管道并行阶段数，将模型拆分到的 GPU 数量"
                 }),
                 "gradient_accumulation_steps": ("INT", {
-                    "default": 0, 
-                    "min": 0, 
+                    "default": 4, 
+                    "min": 1, 
                     "max": 64,
                     "tooltip": "梯度累积步数，0表示自动计算"
                 }),
-                "gradient_clipping": ("INT", {
-                    "default": 0, 
-                    "min": 0, 
-                    "max": 10, 
-                    "step": 0,
-                    "tooltip": "梯度裁剪阈值，0表示不裁剪"
+                "gradient_clipping": ("FLOAT", {
+                    "default": 1.0, 
+                    "min": 1.0, 
+                    "max": 10.0, 
+                    "step": 0.1,
+                    "tooltip": "梯度裁剪阈值，防止梯度爆炸。推荐值：1.0。设为0表示不裁剪"
                 }),
                 "warmup_steps": ("INT", {
                     "default": 500, 
@@ -186,8 +180,8 @@ class GeneralConfig:
     FUNCTION = "generate_settings"
     CATEGORY = "Diffusion-Pipe/Config"
 
-    def generate_settings(self, optimizer_config, model_config, dataset_config, output_folder_name: str, epochs: int, micro_batch_size_per_gpu: int, number_of_gpus: int, 
-                         pipeline_stages: int, gradient_accumulation_steps: int, gradient_clipping: int, 
+    def generate_settings(self, optimizer_config, model_config, dataset_config, output_folder_name: str, epochs: int, micro_batch_size_per_gpu: int, 
+                         pipeline_stages: int, gradient_accumulation_steps: int, gradient_clipping: float, 
                          warmup_steps: int, blocks_to_swap: int, activation_checkpointing: bool, save_dtype: str,
                          partition_method: str, eval_every_n_epochs: int = 1, 
                          eval_before_first_step: bool = True, eval_micro_batch_size_per_gpu: int = 1,
@@ -211,7 +205,6 @@ class GeneralConfig:
             os.makedirs(abs_output_dir, exist_ok=True)
             
             # 配置文件中使用绝对路径（训练脚本需要绝对路径）
-            # 将反斜杠转换为正斜杠，确保跨平台兼容性
             config_output_dir = abs_output_dir.replace('\\', '/')
             
             # 自动计算配置文件保存路径：custom_nodes/Diffusion_pipe_in_ComfyUI/train_config/trainconfig.toml
@@ -220,11 +213,10 @@ class GeneralConfig:
             config_save_path = os.path.join(config_dir, "trainconfig.toml")
             config_save_path = os.path.normpath(config_save_path)
             
-            # 构建设置字典
             settings = {
                 "epochs": epochs,
                 "micro_batch_size_per_gpu": micro_batch_size_per_gpu,
-                "number_of_gpus": number_of_gpus,
+                "gradient_accumulation_steps": gradient_accumulation_steps,  
                 "pipeline_stages": pipeline_stages,
                 "warmup_steps": warmup_steps,
                 "blocks_to_swap": blocks_to_swap,
@@ -232,9 +224,13 @@ class GeneralConfig:
                 "save_dtype": save_dtype,
                 "caching_batch_size": caching_batch_size,
                 "partition_method": partition_method,
-                "output_dir": config_output_dir,  # 使用绝对路径
+                "output_dir": config_output_dir,  
                 "disable_block_swap_for_eval": disable_block_swap_for_eval,
             }
+            
+            # 处理梯度裁剪 - 0表示不裁剪（可选参数）
+            if gradient_clipping > 0:
+                settings["gradient_clipping"] = gradient_clipping
             
             # 处理视频剪辑模式 - 仅在非none时添加到配置中
             if video_clip_mode != "none":
@@ -248,14 +244,6 @@ class GeneralConfig:
                 # 将路径中的反斜杠转换为正斜杠
                 eval_datasets_list = [line.replace('\\', '/') for line in lines if line]
             settings["eval_datasets"] = eval_datasets_list
-            
-            # 处理梯度累积步数 - 0表示不设置此参数（让系统自动计算）
-            if gradient_accumulation_steps > 0:
-                settings["gradient_accumulation_steps"] = gradient_accumulation_steps
-            
-            # 处理梯度裁剪 - 0表示不设置此参数（不进行梯度裁剪）
-            if gradient_clipping > 0:
-                settings["gradient_clipping"] = gradient_clipping
             
             # 处理评估相关参数 - 0表示不评估
             if eval_every_n_epochs > 0:

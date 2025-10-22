@@ -196,11 +196,7 @@ class Train:
             if not os.path.exists(train_script):
                 return "ERROR", f"找不到训练脚本: {train_script}"
             
-            # 构建训练命令 - 针对Windows环境和ComfyUI便携包
-            num_gpus = train_config.get('number_of_gpus', 1)
-            
-            # 使用ComfyUI便携包中的Python解释器
-            # 基于当前文件位置计算到便携包Python的路径
+
             python_exe = os.path.join(current_dir, "..", "..", "..", "python_embeded_DP", "python.exe")
             python_exe = os.path.normpath(python_exe)
             
@@ -266,18 +262,9 @@ class Train:
             # 设置环境变量
             env = os.environ.copy()
             
-            # Windows环境下的CUDA设置
-            if num_gpus > 1:
-                env['WORLD_SIZE'] = str(num_gpus)
-                env['RANK'] = '0'
-                env['LOCAL_RANK'] = '0'
-                env['MASTER_ADDR'] = 'localhost'
-                env['MASTER_PORT'] = str(train_config.get('master_port', 29500))
-            
             # Print command info (minimal)
             print(f"CMD: {' '.join(cmd)}")
             
-            # 在Windows上使用shell=True可能更稳定
             self.training_process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
@@ -285,11 +272,10 @@ class Train:
                 env=env,
                 bufsize=1,
                 universal_newlines=False,
-                shell=False,  # Windows上通常不需要shell=True
-                cwd=current_dir  # 设置工作目录
+                shell=False,  
+                cwd=current_dir  
             )
             
-            # Start separate threads for stdout and stderr
             stdout_thread = threading.Thread(
                 target=self.log_reader_stdout,
                 args=(self.training_process, self.log_queue),
@@ -305,7 +291,6 @@ class Train:
             
             self.is_training = True
             
-            # 等待一小段时间检查进程是否正常启动
             time.sleep(2)
             
             if self.training_process.poll() is not None:

@@ -1,16 +1,16 @@
-epochs = 50
+epochs = 190
 micro_batch_size_per_gpu = 1
-number_of_gpus = 1
+gradient_accumulation_steps = 1
 pipeline_stages = 1
 warmup_steps = 0
-blocks_to_swap = 38
+blocks_to_swap = 0
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
 partition_method = 'parameters'
 output_dir = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/output/123'
-disable_block_swap_for_eval = false
-video_clip_mode = 'multiple_overlapping'
+disable_block_swap_for_eval = true
+gradient_clipping = 1.0
 eval_datasets = []
 save_every_n_epochs = 1
 checkpoint_every_n_minutes = 120
@@ -25,12 +25,9 @@ weight_decay = 0.01
 gradient_release = false
 
 [model]
-type = 'wan'
-ckpt_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/Wan2.2-I2V-A14B'
-transformer_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/Wan2_1/wan_org2.2/wan2.2_i2v_low_noise_14B_fp16.safetensors'
-llm_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/text_encoders/umt5_xxl_fp16.safetensors'
-min_t = 0.0
-max_t = 0.875
+type = 'qwen_image'
+diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusers/Qwen-Image'
+transformer_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/qwen_edit/qwen_image_edit_bf16.safetensors'
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
 transformer_dtype = 'float8'
