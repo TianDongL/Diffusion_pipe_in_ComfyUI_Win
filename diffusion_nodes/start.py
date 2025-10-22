@@ -79,6 +79,10 @@ class Train:
                     "default": False,
                     "tooltip": "跳过某些检查和覆盖（高级用户专用，可能导致训练失败）"
                 }),
+                "dump_dataset": ("STRING", {
+                    "default": "",
+                    "tooltip": "将数据集导出到指定路径（调试用，导出后立即退出）"
+                }),
             }
         }
     
@@ -87,9 +91,9 @@ class Train:
     FUNCTION = "execute"
     CATEGORY = "Diffusion-Pipe/Train"
     
-    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False):
+    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset=""):
         """ComfyUI节点的执行入口"""
-        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint, reset_dataloader, regenerate_cache, trust_cache, cache_only, i_know_what_i_am_doing)
+        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint, reset_dataloader, regenerate_cache, trust_cache, cache_only, i_know_what_i_am_doing, dump_dataset)
     
     def normalize_windows_path(self, path):
         """规范化Windows环境下的路径"""
@@ -148,7 +152,7 @@ class Train:
             print(error_msg)
             log_queue.put(error_msg)
 
-    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False):
+    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset=""):
         """启动训练进程"""
         try:
             # 检查是否已有训练进程在运行
@@ -177,11 +181,9 @@ class Train:
                         # 如果都失败，创建基础配置
                         dataset_config = {}
             
-            # 确保dataset_config是字典类型
             if not isinstance(dataset_config, dict):
                 dataset_config = {}
             
-            # 处理训练配置
             if isinstance(train_config, str):
                 try:
                     import json
@@ -191,25 +193,19 @@ class Train:
                         import toml
                         train_config = toml.loads(train_config)
                     except:
-                        # 如果都失败，创建基础配置
                         train_config = {}
             
-            # 确保train_config是字典类型
             if not isinstance(train_config, dict):
                 train_config = {}
             
-            # 检查配置文件路径
             if not config_path:
                 return "ERROR", "未指定配置文件保存路径 (config_path)"
             
-            # 规范化配置文件路径为Windows格式
             config_path = self.normalize_windows_path(config_path)
             
-            # 检查配置文件是否存在
             if not os.path.exists(config_path):
                 return "ERROR", f"配置文件不存在: {config_path}"
             
-            # 获取训练脚本路径
             current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             train_script = os.path.join(current_dir, "train.py")
             
@@ -220,7 +216,6 @@ class Train:
             python_exe = os.path.join(current_dir, "..", "..", "..", "python_embeded_DP", "python.exe")
             python_exe = os.path.normpath(python_exe)
             
-            # 检查Python解释器是否存在
             if not os.path.exists(python_exe):
                 error_msg = f"错误: 未找到便携包Python解释器: {python_exe}"
                 print(error_msg)
@@ -235,7 +230,6 @@ class Train:
                 "--deepspeed"
             ]
             
-            # 缓存相关参数（优先使用节点参数，其次使用train_config）
             if regenerate_cache or train_config.get('regenerate_cache', False):
                 cmd.append("--regenerate_cache")
             
@@ -257,6 +251,10 @@ class Train:
             # 添加 i_know_what_i_am_doing 参数
             if i_know_what_i_am_doing:
                 cmd.append("--i_know_what_i_am_doing")
+            
+            # 添加 dump_dataset 参数（优先使用节点参数）
+            if dump_dataset and dump_dataset.strip():
+                cmd.extend(["--dump_dataset", dump_dataset.strip()])
             
             # 处理高级配置中的命令行参数（向后兼容，但节点参数优先）
             train_cmd_args = train_config.get('_train_cmd_args', {})
@@ -282,8 +280,8 @@ class Train:
                 if 'master_port' in train_cmd_args:
                     cmd.extend(["--master_port", str(train_cmd_args['master_port'])])
                 
-                # dump_dataset 参数
-                if 'dump_dataset' in train_cmd_args:
+                # dump_dataset 参数（仅在节点未提供时使用）
+                if 'dump_dataset' in train_cmd_args and not dump_dataset:
                     cmd.extend(["--dump_dataset", str(train_cmd_args['dump_dataset'])])
             
             # 设置环境变量

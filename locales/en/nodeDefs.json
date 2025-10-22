@@ -702,6 +702,10 @@
       "i_know_what_i_am_doing": {
         "name": "I Know What I Am Doing",
         "tooltip": "Skip certain checks and overrides (for advanced users, may cause training failure)"
+      },
+      "dump_dataset": {
+        "name": "Dump Dataset",
+        "tooltip": "Export dataset to specified path (for debugging, exits immediately after export)"
       }
     },
     "outputs": {

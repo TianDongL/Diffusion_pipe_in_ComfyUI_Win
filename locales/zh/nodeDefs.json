@@ -702,6 +702,10 @@
       "i_know_what_i_am_doing": {
         "name": "跳过检查",
         "tooltip": "跳过某些检查和覆盖（高级用户专用，可能导致训练失败）"
+      },
+      "dump_dataset": {
+        "name": "导出数据集",
+        "tooltip": "将数据集导出到指定路径（调试用，导出后立即退出）"
       }
     },
     "outputs": {
