@@ -10,6 +10,9 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 ***[📋 View Supported Models](./docs/supported_models.md)***
 
+## update
+
+20251026:support eval 
 
 # Quick Start
 ## You can use my pre configured portable environment pack
