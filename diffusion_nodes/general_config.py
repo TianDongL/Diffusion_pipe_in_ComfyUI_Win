@@ -119,6 +119,9 @@ class GeneralConfig:
                 "advanced_config": ("ADVANCED_TRAIN_CONFIG", {
                     "tooltip": "高级训练配置（可选，来自AdvancedTrainConfig节点）"
                 }),
+                "eval_dataset_config": ("EVAL_DATASET_CONFIG", {
+                    "tooltip": "评估数据集配置（可选，来自EvalDatasetConfig节点）"
+                }),
                 "eval_every_n_epochs": ("INT", {
                     "default": 1, 
                     "min": 0, 
@@ -167,11 +170,6 @@ class GeneralConfig:
                     "default": "none",
                     "tooltip": "仅适用于视频模型训练。视频帧提取模式 - none:不使用视频模式, single_beginning:从视频开头提取一个片段, single_middle:从视频中间提取一个片段, multiple_overlapping:提取多个可能重叠的片段覆盖整个视频"
                 }),
-                "eval_datasets": ("STRING", {
-                    "default": "",
-                    "multiline": True,
-                    "tooltip": "评估数据集列表，每行一个数据集名称或路径。留空则使用默认的空列表。支持相对路径和绝对路径。"
-                }),
             }
         }
     
@@ -188,7 +186,7 @@ class GeneralConfig:
                          eval_gradient_accumulation_steps: int = 1, save_every_n_epochs: int = 1,
                          checkpoint_every_n_minutes: int = 120, caching_batch_size: int = 1,
                          disable_block_swap_for_eval: bool = False, video_clip_mode: str = "none",
-                         eval_datasets: str = "", adapter_config=None, advanced_config=None) -> Tuple[str, str, str]:
+                         adapter_config=None, advanced_config=None, eval_dataset_config=None) -> Tuple[str, str, str]:
         """生成通用训练设置"""
         try:
             plugin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -204,10 +202,8 @@ class GeneralConfig:
             
             os.makedirs(abs_output_dir, exist_ok=True)
             
-            # 配置文件中使用绝对路径（训练脚本需要绝对路径）
             config_output_dir = abs_output_dir.replace('\\', '/')
             
-            # 自动计算配置文件保存路径：custom_nodes/Diffusion_pipe_in_ComfyUI/train_config/trainconfig.toml
             config_dir = os.path.join(plugin_dir, "train_config")
             os.makedirs(config_dir, exist_ok=True)
             config_save_path = os.path.join(config_dir, "trainconfig.toml")
@@ -228,55 +224,73 @@ class GeneralConfig:
                 "disable_block_swap_for_eval": disable_block_swap_for_eval,
             }
             
-            # 处理梯度裁剪 - 0表示不裁剪（可选参数）
             if gradient_clipping > 0:
                 settings["gradient_clipping"] = gradient_clipping
             
-            # 处理视频剪辑模式 - 仅在非none时添加到配置中
             if video_clip_mode != "none":
                 settings["video_clip_mode"] = video_clip_mode
             
-            # 处理评估数据集 - 解析用户输入的多行文本
             eval_datasets_list = []
-            if eval_datasets and eval_datasets.strip():
-                # 按行分割，去除空行和前后空格
-                lines = [line.strip() for line in eval_datasets.strip().split('\n')]
-                # 将路径中的反斜杠转换为正斜杠
-                eval_datasets_list = [line.replace('\\', '/') for line in lines if line]
+            
+            if eval_dataset_config:
+                try:
+                    eval_dataset_path = None
+                    
+                    eval_dataset_dir = os.path.join(os.path.dirname(__file__), "..", "evaldataset")
+                    eval_dataset_dir = os.path.abspath(eval_dataset_dir)
+                    
+                    if os.path.exists(eval_dataset_dir):
+                        toml_files = [f for f in os.listdir(eval_dataset_dir) if f.endswith('.toml')]
+                        if toml_files:
+                            latest_file = max(toml_files, key=lambda f: os.path.getmtime(os.path.join(eval_dataset_dir, f)))
+                            eval_dataset_path = os.path.abspath(os.path.join(eval_dataset_dir, latest_file)).replace('\\', '/')
+                    
+                    if not eval_dataset_path:
+                        comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
+                        comfyui_root = os.path.abspath(comfyui_root)
+                        default_eval_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "evaldataset.toml")
+                        eval_dataset_path = os.path.normpath(os.path.abspath(default_eval_dataset_path)).replace('\\', '/')
+                    
+                    if eval_dataset_path:
+                        eval_datasets_list.append({
+                            'name': 'validation_set',
+                            'config': eval_dataset_path
+                        })
+                        logging.info(f"使用评估数据集配置: {eval_dataset_path}")
+                        
+                except Exception as e:
+                    logging.warning(f"处理评估数据集配置时出错: {str(e)}")
+                    comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
+                    comfyui_root = os.path.abspath(comfyui_root)
+                    fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "evaldataset.toml")
+                    fallback_eval_path = os.path.normpath(os.path.abspath(fallback_path)).replace('\\', '/')
+                    eval_datasets_list.append({
+                        'name': 'validation_set',
+                        'config': fallback_eval_path
+                    })
+            
             settings["eval_datasets"] = eval_datasets_list
             
-            # 处理评估相关参数 - 0表示不评估
             if eval_every_n_epochs > 0:
                 settings["eval_every_n_epochs"] = eval_every_n_epochs
                 settings["eval_before_first_step"] = eval_before_first_step
                 settings["eval_micro_batch_size_per_gpu"] = eval_micro_batch_size_per_gpu
                 settings["eval_gradient_accumulation_steps"] = eval_gradient_accumulation_steps
             
-            # 处理保存相关参数 - 0表示不定期保存
             if save_every_n_epochs > 0:
                 settings["save_every_n_epochs"] = save_every_n_epochs
             
             if checkpoint_every_n_minutes > 0:
                 settings["checkpoint_every_n_minutes"] = checkpoint_every_n_minutes
             
-            # 合并优化器配置（必需）
             if optimizer_config:
                 try:
-                    # 如果optimizer_config是字符串，尝试解析为JSON
                     if isinstance(optimizer_config, str):
                         optimizer_dict = json.loads(optimizer_config)
                     else:
                         optimizer_dict = optimizer_config
                     
-                    # 将优化器配置合并到设置中
                     if isinstance(optimizer_dict, dict):
-                        # 为某些优化器添加默认参数
-                        if optimizer_dict.get("type") == "AdamW8bitKahan":
-                            # 为AdamW8bitKahan添加gradient_release参数
-                            if "gradient_release" not in optimizer_dict:
-                                optimizer_dict["gradient_release"] = False
-                        
-                        # 添加optimizer section以匹配TOML配置格式
                         settings["optimizer"] = optimizer_dict
                         logging.info(f"成功合并优化器配置，类型: {optimizer_dict.get('type', 'unknown')}")
                     else:
@@ -286,10 +300,8 @@ class GeneralConfig:
             else:
                 logging.warning("未提供优化器配置，这可能导致训练失败")
             
-            # 合并模型配置（必需）
             if model_config:
                 try:
-                    # 如果model_config是字符串，尝试解析为JSON
                     if isinstance(model_config, str):
                         model_dict = json.loads(model_config)
                     else:
@@ -309,23 +321,14 @@ class GeneralConfig:
                 logging.error("未提供模型配置，这是必需的参数")
                 raise ValueError("model_config是必需参数，必须连接模型配置节点")
             
-            # 处理数据集配置（必需）
             if dataset_config:
                 try:
-                    # 数据集配置应该包含保存路径信息，我们需要从中提取数据集文件路径
-                    # dataset_config 是配置内容字符串，我们需要找到对应的输出路径
-                    # 从 GeneralDatasetConfig 节点的 output_path 参数推导数据集文件路径
-                    
-                    # 简单的方法：通过解析配置内容查找数据集路径模式
-                    # 或者直接使用固定的数据集文件路径（基于约定）
                     dataset_path = None
                     
-                    # 方法1：尝试从当前工作目录找到最近保存的数据集配置文件
                     dataset_dir = os.path.join(os.path.dirname(__file__), "..", "dataset")
                     dataset_dir = os.path.abspath(dataset_dir)  # 标准化为绝对路径
                     
                     if os.path.exists(dataset_dir):
-                        # 查找最新的 .toml 数据集文件
                         toml_files = [f for f in os.listdir(dataset_dir) if f.endswith('.toml')]
                         if toml_files:
                             # 使用最新修改的文件
@@ -337,7 +340,7 @@ class GeneralConfig:
                         # 计算相对于ComfyUI根目录的标准化路径
                         comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
                         comfyui_root = os.path.abspath(comfyui_root)
-                        default_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI", "dataset", "dataset.toml")
+                        default_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
                         dataset_path = os.path.normpath(os.path.abspath(default_dataset_path)).replace('\\', '/')
                     
                     # 添加数据集引用到配置中
@@ -349,7 +352,7 @@ class GeneralConfig:
                     # 使用默认数据集路径作为后备方案
                     comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
                     comfyui_root = os.path.abspath(comfyui_root)
-                    fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI", "dataset", "dataset.toml")
+                    fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
                     settings["dataset"] = os.path.normpath(os.path.abspath(fallback_path)).replace('\\', '/')
             else:
                 logging.error("未提供数据集配置，这是必需的参数")
@@ -405,24 +408,21 @@ class GeneralConfig:
             # 输出为TOML格式
             if toml:
                 try:
+                    eval_datasets_value = settings.pop('eval_datasets', [])
                     train_config = toml.dumps(settings)
-                    # 将双引号替换为单引号
                     train_config = self._replace_quotes_in_toml(train_config)
+                    eval_datasets_line = self._format_toml_value('eval_datasets', eval_datasets_value)
+                    train_config = eval_datasets_line + '\n' + train_config
+                    
                 except Exception as e:                   
                     train_config = json.dumps(settings, indent=2, ensure_ascii=False)
-                    # JSON格式也替换为单引号
                     train_config = train_config.replace('"', "'")
-            else:
-                # 如果没有toml库，使用自定义TOML格式化
-                train_config = self._format_as_toml(settings)
             
-            # 保存配置文件
             try:
                 import datetime
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 current_cwd = os.getcwd()
                 
-                # 输出配置信息到控制台
                 print(f"[Config] Saved to: {config_save_path}")
                 print(f"[Config] Output directory (absolute): {config_output_dir}")
                 print(f"[Config] Generated at: {current_time}")
@@ -468,20 +468,37 @@ class GeneralConfig:
         elif isinstance(value, str):
             return f"{key} = '{value}'"
         elif isinstance(value, list):
-            if all(isinstance(x, str) for x in value):
-                formatted_list = ', '.join([f"'{x}'" for x in value])
+            if key == 'eval_datasets':
+                formatted_items = []
+                for item in value:
+                    if isinstance(item, dict):
+                        dict_parts = []
+                        for k, v in item.items():
+                            if isinstance(v, str):
+                                dict_parts.append(f"{k} = '{v}'")
+                            elif isinstance(v, bool):
+                                dict_parts.append(f"{k} = {str(v).lower()}")
+                            else:
+                                dict_parts.append(f"{k} = {v}")
+                        formatted_items.append('{' + ', '.join(dict_parts) + '}')
+                    elif isinstance(item, str):
+                        formatted_items.append(f"'{item}'")
+                    else:
+                        formatted_items.append(str(item))
+                return f"{key} = [{', '.join(formatted_items)}]"
             else:
-                formatted_list = ', '.join([str(x) for x in value])
-            return f"{key} = [ {formatted_list},]"
+                if all(isinstance(x, str) for x in value):
+                    formatted_list = ', '.join([f"'{x}'" for x in value])
+                else:
+                    formatted_list = ', '.join([str(x) for x in value])
+                return f"{key} = [ {formatted_list},]"
         else:
             return f"{key} = {value}"
     
     def _replace_quotes_in_toml(self, toml_text: str) -> str:
-        """将TOML文本中的双引号替换为单引号"""
         return toml_text.replace('"', "'")
     
     def _normalize_paths_in_dict(self, data: Any) -> Any:
-        """递归地将字典中所有路径字符串的反斜杠转换为正斜杠"""
         if isinstance(data, dict):
             return {key: self._normalize_paths_in_dict(value) for key, value in data.items()}
         elif isinstance(data, list):

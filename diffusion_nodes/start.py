@@ -121,34 +121,54 @@ class Train:
                 # 规范化路径
         return os.path.normpath(path)
 
-    def log_reader_stdout(self, process, log_queue):
-        """Read stdout from training process and print to console"""
+    def log_reader(self, stream, log_queue, prefix="", stream_name="stream"):
         try:
-            for line in iter(process.stdout.readline, b''):
-                if line:
-                    decoded_line = line.decode('utf-8', errors='ignore').rstrip()
-                    if decoded_line:
-                        # 同时打印到控制台和放入队列
-                        print(decoded_line)
-                        log_queue.put(decoded_line)
+            buffer = ""
+            last_was_progress = False
+            
+            while True:
+                chunk = stream.read(256)
+                if not chunk:
+                    break
+                    
+                text = chunk.decode('utf-8', errors='ignore')
+                
+                for char in text:
+                    if char == '\n':
+                        if buffer.strip():
+                            if last_was_progress:
+                                print()
+                            line = f"{prefix}{buffer}" if prefix else buffer
+                            print(line)
+                            log_queue.put(line)
+                            last_was_progress = False
+                        buffer = ""
+                    elif char == '\r':
+                        if buffer.strip():
+                            is_progress = '%|' in buffer or '|/' in buffer or ('[' in buffer and ']' in buffer)
+                            if is_progress:
+                                print(f"\r{buffer}", end='', flush=True)
+                                last_was_progress = True
+                            else:
+                                # Regular line: print with newline
+                                if last_was_progress:
+                                    print()
+                                line = f"{prefix}{buffer}" if prefix else buffer
+                                print(line)
+                                log_queue.put(line)
+                                last_was_progress = False
+                        buffer = ""
+                    else:
+                        buffer += char
+                    
+            if buffer.strip():
+                if last_was_progress:
+                    print()
+                line = f"{prefix}{buffer}" if prefix else buffer
+                print(line)
+                log_queue.put(line)
         except Exception as e:
-            error_msg = f"ERROR reading stdout: {str(e)}"
-            print(error_msg)
-            log_queue.put(error_msg)
-    
-    def log_reader_stderr(self, process, log_queue):
-        """Read stderr from training process and print to console"""
-        try:
-            for line in iter(process.stderr.readline, b''):
-                if line:
-                    decoded_line = line.decode('utf-8', errors='ignore').rstrip()
-                    if decoded_line:
-                        # 同时打印到控制台（带标记）和放入队列
-                        stderr_line = f"[STDERR] {decoded_line}"
-                        print(stderr_line)
-                        log_queue.put(stderr_line)
-        except Exception as e:
-            error_msg = f"ERROR reading stderr: {str(e)}"
+            error_msg = f"ERROR reading {stream_name}: {str(e)}"
             print(error_msg)
             log_queue.put(error_msg)
 
@@ -157,7 +177,7 @@ class Train:
         try:
             # 检查是否已有训练进程在运行
             if self.training_process and self.training_process.poll() is None:
-                message = "训练已经在进行中，请等待当前训练完成或手动停止后再启动新的训练"
+                message = "❗训练已经在进行中，请等待当前训练完成或手动停止后再启动新的训练"
                 print(message)
                 return "WARNING", message
             
@@ -267,8 +287,6 @@ class Train:
                     elif isinstance(resume_value, str):
                         cmd.extend(["--resume_from_checkpoint", resume_value])
                 
-                # 布尔型参数（仅在节点未启用时从_train_cmd_args读取）
-                # regenerate_cache 和 trust_cache 已由节点参数处理，这里不重复
                 bool_args = ['reset_dataloader', 'cache_only', 'i_know_what_i_am_doing']
                 for arg in bool_args:
                     if train_cmd_args.get(arg, False):
@@ -284,8 +302,8 @@ class Train:
                 if 'dump_dataset' in train_cmd_args and not dump_dataset:
                     cmd.extend(["--dump_dataset", str(train_cmd_args['dump_dataset'])])
             
-            # 设置环境变量
             env = os.environ.copy()
+            env['PYTHONUNBUFFERED'] = '1'
             
             # Print command info (minimal)
             print(f"CMD: {' '.join(cmd)}")
@@ -295,20 +313,20 @@ class Train:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 env=env,
-                bufsize=1,
+                bufsize=0,  # 无缓冲模式
                 universal_newlines=False,
                 shell=False,  
                 cwd=current_dir  
             )
             
             stdout_thread = threading.Thread(
-                target=self.log_reader_stdout,
-                args=(self.training_process, self.log_queue),
+                target=self.log_reader,
+                args=(self.training_process.stdout, self.log_queue, "", "stdout"),
                 daemon=True
             )
             stderr_thread = threading.Thread(
-                target=self.log_reader_stderr,
-                args=(self.training_process, self.log_queue),
+                target=self.log_reader,
+                args=(self.training_process.stderr, self.log_queue, "Training ", "stderr"),
                 daemon=True
             )
             stdout_thread.start()
@@ -323,7 +341,6 @@ class Train:
                 return_code = self.training_process.returncode
                 error_msg = f"Process failed. Exit code: {return_code}"
                 
-                # Try to read error output
                 try:
                     stderr_output = self.training_process.stderr.read().decode('utf-8', errors='ignore')
                     if stderr_output:

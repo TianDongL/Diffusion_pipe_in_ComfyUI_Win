@@ -195,8 +195,11 @@ def _evaluate(model_engine, eval_dataloaders, tb_writer, step, eval_gradient_acc
     for eval_dataloader in eval_dataloaders.values():
         pbar_total += len(eval_dataloader) * len(TIMESTEP_QUANTILES_FOR_EVAL) // eval_gradient_accumulation_steps
     if is_main_process():
-        print('Running eval')
-        pbar = tqdm(total=pbar_total)
+        print('Running eval', flush=True)
+        import sys
+        pbar = tqdm(total=pbar_total, file=sys.stderr, 
+                   ascii=True, ncols=100, 
+                   bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]')
     else:
         pbar = None
 

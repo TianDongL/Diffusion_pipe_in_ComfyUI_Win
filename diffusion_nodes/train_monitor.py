@@ -56,19 +56,19 @@ class TensorBoardProcessManager:
                         cmdline = proc.info['cmdline'] or []
                         cmdline_str = ' '.join(cmdline)
                         if f'--port={port}' in cmdline_str or f'--port {port}' in cmdline_str:
-                            print(f"找到占用端口{port}的进程: PID {proc.info['pid']}")
+                            print(f"[TensorBoard] 找到占用端口 {port} 的进程: PID {proc.info['pid']}")
                             proc.terminate()
                             try:
                                 proc.wait(timeout=5)
                             except psutil.TimeoutExpired:
                                 proc.kill()
-                                print(f"强制终止进程 PID {proc.info['pid']}")
+                                print(f"[TensorBoard] 强制终止进程 PID {proc.info['pid']}")
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                     pass
             
             return True
         except Exception as e:
-            print(f"终止端口{port}上的进程时出错: {e}")
+            print(f"[TensorBoard] 终止端口 {port} 上的进程时出错: {e}")
             return False
     
     def is_port_in_use(self, port):
@@ -137,19 +137,26 @@ class TensorBoardMonitor:
     
     def execute(self, output_dir, port=6006, host="localhost", is_new_training=True, action="start"):
         """执行TensorBoard监控操作"""
+        print("\n" + "="*80)
+        print(f"[TensorBoard Monitor] 执行操作: {action}")
+        print("="*80)
+        
         if action == "start":
             url_result = self.start_tensorboard(output_dir, port, host, is_new_training)
             status = self.get_current_status()
             url = url_result[0] if url_result and len(url_result) > 0 else ""
+            print("="*80 + "\n")
             return (url, status)
         elif action == "stop":
             result_tuple = self.stop_tensorboard()
             status = self.get_current_status()
             result = result_tuple[0] if result_tuple and len(result_tuple) > 0 else ""
+            print("="*80 + "\n")
             return (result, status)
         elif action == "status":
             status = self.get_current_status()
             url = f"http://{host}:{port}" if self.is_running else ""
+            print("="*80 + "\n")
             return (url, status)
         elif action == "kill_port":
             if self.process_manager.kill_process_on_port(port):
@@ -159,8 +166,10 @@ class TensorBoardMonitor:
                 result = f"清理端口{port}失败或该端口无进程 (Failed to clean port {port} or no processes on this port)"
                 print(result)
             status = self.get_current_status()
+            print("="*80 + "\n")
             return ("", result)
         else:
+            print("="*80 + "\n")
             return ("", "未知操作 (Unknown operation)")
     
     def normalize_path(self, path):
@@ -187,35 +196,35 @@ class TensorBoardMonitor:
     def find_latest_training_dir(self, base_dir):
         """在基础目录中寻找最新的训练子目录"""
         try:
-            print(f"正在扫描目录: {base_dir}")
+            print(f"[TensorBoard] 正在扫描目录: {base_dir}")
             training_dirs = []
             
             if not os.path.exists(base_dir):
-                print(f"基础目录不存在: {base_dir}")
+                print(f"[TensorBoard] 基础目录不存在: {base_dir}")
                 return None
                 
             items = os.listdir(base_dir)
-            print(f"找到 {len(items)} 个项目")
+            print(f"[TensorBoard] 找到 {len(items)} 个项目")
             
             for item in items:
                 item_path = os.path.join(base_dir, item)
                 if os.path.isdir(item_path):
-                    print(f"检查子目录: {item}")
+                    print(f"[TensorBoard] 检查子目录: {item}")
                     if self.has_tensorboard_files(item_path):
-                        print(f"发现训练日志目录: {item}")
+                        print(f"[TensorBoard] 发现训练日志目录: {item}")
                         training_dirs.append((item_path, os.path.getmtime(item_path)))
             
             if training_dirs:
                 training_dirs.sort(key=lambda x: x[1], reverse=True)
                 latest_dir = training_dirs[0][0]
-                print(f"选择最新的训练目录: {latest_dir}")
+                print(f"[TensorBoard] 选择最新的训练目录: {latest_dir}")
                 return latest_dir
             
-            print("未找到包含TensorBoard日志的子目录")
+            print("[TensorBoard] 未找到包含TensorBoard日志的子目录")
             return None
             
         except Exception as e:
-            print(f"查找训练目录时出错: {e}")
+            print(f"[TensorBoard] 查找训练目录时出错: {e}")
             return None
     
     def has_tensorboard_files(self, directory):
@@ -234,18 +243,19 @@ class TensorBoardMonitor:
     def start_tensorboard(self, output_dir, port, host, is_new_training=True):
         """启动TensorBoard服务"""
         try:
+            print(f"[TensorBoard] 开始启动服务...")
             if output_dir is None:
-                print("错误: output_dir 参数为 None")
+                print("[TensorBoard] 错误: output_dir 参数为 None")
                 return ("",)
             
             # 清理端口
             if self.process_manager.is_port_in_use(port):
-                print(f"检测到端口{port}被占用，正在清理...")
+                print(f"[TensorBoard] 检测到端口 {port} 被占用，正在清理...")
                 if self.process_manager.kill_process_on_port(port):
-                    print(f"成功清理端口{port}")
+                    print(f"[TensorBoard] 成功清理端口 {port}")
                     time.sleep(3)  # 等待端口释放
                 else:
-                    print(f"清理端口{port}失败")
+                    print(f"[TensorBoard] 清理端口 {port} 失败")
                     return ("",)
             
             # 检查是否已经运行
@@ -256,23 +266,23 @@ class TensorBoardMonitor:
             output_dir = self.normalize_path(output_dir)
             
             if not os.path.exists(output_dir):
-                print(f"输出目录不存在: {output_dir}")
+                print(f"[TensorBoard] 输出目录不存在: {output_dir}")
                 return ("",)
             
             # 新训练模式等待
             if is_new_training:
-                print("开始新训练模式：等待训练文件生成（30秒延迟）...")
+                print("[TensorBoard] 新训练模式：等待训练文件生成（30秒延迟）...")
                 time.sleep(30)
-                print("等待完成，开始查找最新训练目录")
+                print("[TensorBoard] 等待完成，开始查找最新训练目录")
             
             # 查找训练目录
             logdir = self.find_latest_training_dir(output_dir)
             
             if logdir and os.path.exists(logdir):
-                print(f"使用训练日志目录: {logdir}")
+                print(f"[TensorBoard] 使用训练日志目录: {logdir}")
                 final_logdir = logdir
             else:
-                print(f"在目录 {output_dir} 中未找到训练日志，使用基础目录")
+                print(f"[TensorBoard] 在目录 {output_dir} 中未找到训练日志，使用基础目录")
                 final_logdir = output_dir
             
             # 构建TensorBoard启动命令
@@ -284,9 +294,9 @@ class TensorBoardMonitor:
                 "--reload_interval", "30"
             ]
             
-            print(f"启动TensorBoard命令: {' '.join(cmd)}")
-            print(f"日志目录: {final_logdir}")
-            print(f"访问地址: http://{host}:{port}")
+            print(f"[TensorBoard] 启动命令: {' '.join(cmd)}")
+            print(f"[TensorBoard] 日志目录: {final_logdir}")
+            print(f"[TensorBoard] 访问地址: http://{host}:{port}")
             
             # 启动进程
             self.tensorboard_process = subprocess.Popen(
@@ -321,12 +331,12 @@ class TensorBoardMonitor:
             # 检查启动状态
             if self.tensorboard_process.poll() is not None:
                 return_code = self.tensorboard_process.returncode
-                print(f"TensorBoard启动失败，返回码: {return_code}")
+                print(f"[TensorBoard] 启动失败，返回码: {return_code}")
                 
                 try:
                     stderr_output = self.tensorboard_process.stderr.read()
                     if stderr_output:
-                        print(f"错误信息: {stderr_output}")
+                        print(f"[TensorBoard] 错误信息: {stderr_output}")
                 except:
                     pass
                 
@@ -335,30 +345,32 @@ class TensorBoardMonitor:
                 return ("",)
             
             url = f"http://{host}:{port}"
-            print(f"TensorBoard成功启动! PID: {self.tensorboard_process.pid}")
-            print(f"访问地址: {url}")
+            print(f"[TensorBoard] 成功启动! PID: {self.tensorboard_process.pid}")
+            print(f"[TensorBoard] 访问地址: {url}")
             
             return (url,)
             
         except FileNotFoundError:
-            print("Python解释器路径错误或TensorBoard未安装")
+            print("[TensorBoard] Python解释器路径错误或TensorBoard未安装")
             return ("",)
         except Exception as e:
             self.is_running = False
-            print(f"启动TensorBoard时发生错误: {str(e)}")
+            print(f"[TensorBoard] 启动时发生错误: {str(e)}")
             return ("",)
     
     def stop_tensorboard(self):
         """停止TensorBoard服务"""
         result = "TensorBoard未运行 (TensorBoard not running)"
         
+        print("[TensorBoard] 开始停止服务...")
+        
         if self.current_port:
             if self.process_manager.kill_process_on_port(self.current_port):
                 result = "TensorBoard已停止 (TensorBoard stopped)"
-                print("TensorBoard已停止 (TensorBoard stopped)")
+                print("[TensorBoard] 已停止 (TensorBoard stopped)")
             else:
                 result = "停止失败 (Stop failed)"
-                print("停止TensorBoard时出现错误 (Error occurred while stopping TensorBoard)")
+                print("[TensorBoard] 停止时出现错误 (Error occurred while stopping TensorBoard)")
         
         if self.tensorboard_process:
             try:
@@ -369,14 +381,14 @@ class TensorBoardMonitor:
                 except subprocess.TimeoutExpired:
                     self.tensorboard_process.kill()
                     self.tensorboard_process.wait()
-                    print("TensorBoard进程被强制终止 (TensorBoard process was forcibly terminated)")
+                    print("[TensorBoard] 进程被强制终止 (TensorBoard process was forcibly terminated)")
                 
                 if result == "TensorBoard未运行 (TensorBoard not running)":
                     result = "TensorBoard已停止 (TensorBoard stopped)"
-                    print("TensorBoard已停止 (TensorBoard stopped)")
+                    print("[TensorBoard] 已停止 (TensorBoard stopped)")
                 
             except Exception as e:
-                print(f"停止TensorBoard时出现错误 (Error stopping TensorBoard): {str(e)}")
+                print(f"[TensorBoard] 停止时出现错误 (Error stopping TensorBoard): {str(e)}")
                 if result == "TensorBoard未运行 (TensorBoard not running)":
                     result = f"停止失败 (Stop failed): {str(e)}"
         
@@ -394,7 +406,7 @@ class TensorBoardMonitor:
     def get_current_status(self):
         """获取TensorBoard当前状态"""
         if not self.tensorboard_process:
-            return "🔴 未启动 (Not Started)"
+            return "未启动 (Not Started)"
         
         if self.tensorboard_process.poll() is None:
             pid = self.tensorboard_process.pid
@@ -409,8 +421,8 @@ class TensorBoardMonitor:
                 time_str = "未知 (Unknown)"
             
             status_lines = [
-                f"🟢 运行中 (Running) (PID: {pid})",
-                f"⏱️  运行时间 (Runtime): {time_str}"
+                f"运行中 (Running) - PID: {pid}",
+                f"运行时间 (Runtime): {time_str}"
             ]
             
             if self.current_logdir:
@@ -418,12 +430,12 @@ class TensorBoardMonitor:
                     rel_path = os.path.relpath(self.current_logdir)
                     if len(rel_path) > 80:
                         rel_path = "..." + rel_path[-77:]
-                    status_lines.append(f"📁 监控目录 (Monitor Dir): {rel_path}")
+                    status_lines.append(f"监控目录 (Monitor Dir): {rel_path}")
                 except:
-                    status_lines.append(f"📁 监控目录 (Monitor Dir): {self.current_logdir}")
+                    status_lines.append(f"监控目录 (Monitor Dir): {self.current_logdir}")
             
             if self.current_host and self.current_port:
-                status_lines.append(f"🌐 访问地址 (Access URL): http://{self.current_host}:{self.current_port}")
+                status_lines.append(f"访问地址 (Access URL): http://{self.current_host}:{self.current_port}")
             
             if self.current_logdir and os.path.exists(self.current_logdir):
                 try:
@@ -435,7 +447,7 @@ class TensorBoardMonitor:
                                 event_files.append(rel_file_path)
                     
                     if event_files:
-                        status_lines.append(f"📊 发现 {len(event_files)} 个事件文件 (Found {len(event_files)} event files):")
+                        status_lines.append(f"发现 {len(event_files)} 个事件文件 (Found {len(event_files)} event files):")
                         for i, file in enumerate(event_files[:3]):
                             if len(file) > 60:
                                 file = file[:57] + "..."
@@ -443,10 +455,10 @@ class TensorBoardMonitor:
                         if len(event_files) > 3:
                             status_lines.append(f"   • ... 还有 {len(event_files) - 3} 个文件 (... {len(event_files) - 3} more files)")
                     else:
-                        status_lines.append("⚠️  未找到TensorBoard事件文件 (No TensorBoard event files found)")
+                        status_lines.append("未找到TensorBoard事件文件 (No TensorBoard event files found)")
                         
                 except Exception as e:
-                    status_lines.append(f"⚠️  读取目录时出错 (Error reading directory): {str(e)}")
+                    status_lines.append(f"读取目录时出错 (Error reading directory): {str(e)}")
             
             return "\n".join(status_lines)
         else:
@@ -454,9 +466,9 @@ class TensorBoardMonitor:
             self.is_running = False
             
             if return_code == 0:
-                return "🔴 已停止 (Stopped) (正常退出 Normal Exit)"
+                return "已停止 (Stopped) - 正常退出 (Normal Exit)"
             else:
-                return f"🔴 已停止 (Stopped) (异常退出 Abnormal Exit，返回码 Return Code: {return_code})"
+                return f"已停止 (Stopped) - 异常退出 (Abnormal Exit), 返回码 (Return Code): {return_code}"
     
     def log_reader(self, process, log_queue):
         """读取TensorBoard进程的输出日志"""

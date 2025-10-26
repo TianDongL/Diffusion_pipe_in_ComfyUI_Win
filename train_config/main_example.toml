@@ -4,7 +4,7 @@ output_dir = '/data/diffusion_pipe_training_runs/hunyuan_video_test'
 # Dataset config file.
 dataset = 'examples/dataset.toml'
 # You can have separate eval datasets. Give them a name for Tensorboard metrics.
-eval_datasets = [
+# eval_datasets = [
 #     {name = 'something', config = 'path/to/eval_dataset.toml'},
 # ]
 
@@ -13,7 +13,7 @@ eval_datasets = [
 # I usually set this to a really high value because I don't know how long I want to train.
 epochs = 1000
 # Maximum number of steps to train.
-max_steps = 5000
+#max_steps = 5000
 # Batch size of a single forward/backward pass for one GPU.
 micro_batch_size_per_gpu = 1
 # For mixed video / image training, you can have a different batch size for images.
@@ -29,18 +29,18 @@ gradient_clipping = 1.0
 warmup_steps = 100
 # Force the learning rate to be this value, regardless of what the optimizer or anything else says.
 # Can be used to change learning rate even when resuming from checkpoint.
-force_constant_lr = 1e-5
+#force_constant_lr = 1e-5
 # Can be 'constant' or 'linear'. If unset, will default to 'constant', i.e. no LR scheduler.
-lr_scheduler = 'linear'
+#lr_scheduler = 'linear'
 
 # Block swapping is supported for Wan, HunyuanVideo, Flux, and Chroma. This value controls the number
 # of blocks kept offloaded to RAM. Increasing it lowers VRAM use, but has a performance penalty. The
 # exactly performance penalty depends on the model and the type of training you are doing (e.g. images vs video).
 # Block swapping only works for LoRA training, and requires pipeline_stages=1.
-blocks_to_swap = 20
+#blocks_to_swap = 20
 
 # Use pseudo Huber loss with constant c. Only works on models that use the default loss function.
-pseudo_huber_c = 0.5
+#pseudo_huber_c = 0.5
 
 # eval settings
 
@@ -58,7 +58,7 @@ eval_micro_batch_size_per_gpu = 1
 eval_gradient_accumulation_steps = 1
 # If using block swap, you can disable it for eval. Eval uses less memory, so depending on block swapping amount you can maybe get away with
 # doing this, and then eval is much faster.
-disable_block_swap_for_eval = true
+#disable_block_swap_for_eval = true
 
 # misc settings
 

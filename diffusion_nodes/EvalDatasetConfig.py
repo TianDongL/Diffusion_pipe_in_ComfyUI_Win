@@ -30,10 +30,10 @@ def normalize_windows_path(path):
     # 规范化路径
     return os.path.normpath(path)
 
-class GeneralDatasetConfig:
+class EvalDatasetConfig:
     """
-    通用数据集配置节点
-    用于配置训练数据集的各种参数
+    评估数据集配置节点
+    用于配置评估数据集的各种参数
     """
     
     @classmethod
@@ -42,14 +42,14 @@ class GeneralDatasetConfig:
             "required": {
                 # 输入路径
                 "input_path": ("input_path", {
-                    "tooltip": "数据集输入路径，必选，根据不同训练目的，选择不同节点"
+                    "tooltip": "评估数据集输入路径，必选，根据不同训练目的，选择不同节点"
                 }),
                 
                 # 基础分辨率设置
                 "resolutions": ("STRING", {
                     "default": "[512]",
                     "multiline": False,
-                    "tooltip": "训练分辨率，可以是单个数值（正方形）或 [宽度, 高度] 对,例如: [1280, 720]"
+                    "tooltip": "评估分辨率，可以是单个数值（正方形）或 [宽度, 高度] 对,例如: [1280, 720]"
                 }),
                 
                 # 宽高比分桶设置
@@ -86,7 +86,7 @@ class GeneralDatasetConfig:
                     "min": 1,
                     "max": 100,
                     "step": 1,
-                    "tooltip": "数据集重复次数，用于增加训练数据的有效使用次数"
+                    "tooltip": "评估数据集重复次数"
                 }),
             },
             "optional": {
@@ -100,15 +100,15 @@ class GeneralDatasetConfig:
             }
         }
     
-    RETURN_TYPES = ("DATASET_CONFIG",)
-    RETURN_NAMES = ("dataset_config",)
+    RETURN_TYPES = ("EVAL_DATASET_CONFIG",)
+    RETURN_NAMES = ("eval_dataset_config",)
     FUNCTION = "generate_config"
     CATEGORY = "Diffusion-Pipe/dataset"
     
     def generate_config(self, input_path, resolutions, enable_ar_bucket, min_ar, max_ar, 
                        num_ar_buckets, num_repeats, frame_buckets=None, ar_buckets=None):
         """
-        生成数据集配置文件内容
+        生成评估数据集配置文件内容
         """
         try:
             # 处理input_path参数
@@ -172,7 +172,6 @@ class GeneralDatasetConfig:
             if frame_buckets_list is not None:
                 config_lines.append(f"frame_buckets = {frame_buckets_list}")
             
-            # 添加目录配置
             if control_path:
 
                 normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\target\\images"
@@ -184,9 +183,7 @@ class GeneralDatasetConfig:
                     f"num_repeats = {num_repeats}",
                 ])
             else:
-                # 通用数据集配置
-                # 使用WSL路径规范化处理路径
-                normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\your\\dataset"
+                normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\your\\eval\\dataset"
                 config_lines.extend([
                     "[[directory]]",
                     f"path = '{normalized_dataset_path}'",
@@ -195,48 +192,40 @@ class GeneralDatasetConfig:
             
             config_content = "\n".join(config_lines)
             
-            # 保存配置文件到固定路径
             try:
-                # 使用相对路径计算输出路径
                 current_dir = os.path.dirname(os.path.abspath(__file__))
-                output_path = os.path.join(current_dir, "..", "dataset", "dataset.toml")
+                output_path = os.path.join(current_dir, "..", "dataset", "evaldataset.toml")
                 normalized_output_path = os.path.normpath(output_path)
                 
-                # 确保输出目录存在
                 output_dir = os.path.dirname(normalized_output_path)
                 if output_dir:
                     os.makedirs(output_dir, exist_ok=True)
                 
-                # 在配置内容前添加路径注释和时间戳
                 import datetime
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 current_cwd = os.getcwd()
-                # 输出配置信息到控制台
                 print("\n" + "="*80)
-                print(f"[数据集配置] 配置文件已保存到: {normalized_output_path}")
-                print(f"[数据集配置] 生成时间: {current_time}")
-                print(f"[数据集配置] 当前工作目录: {current_cwd}")
+                print(f"[评估数据集配置] 配置文件已保存到: {normalized_output_path}")
+                print(f"[评估数据集配置] 生成时间: {current_time}")
+                print(f"[评估数据集配置] 当前工作目录: {current_cwd}")
                 print("="*80 + "\n")
                 
-                config_with_path = config_content
-                
                 with open(normalized_output_path, 'w', encoding='utf-8') as f:
-                    f.write(config_with_path)
+                    f.write(config_content)
                 
-                # 显示保存路径时使用正斜杠（便于阅读）
                 display_path = normalized_output_path.replace('\\', '/')
                 print("="*80)
-                print(f"数据集配置已保存到: {display_path}")
+                print(f"评估数据集配置已保存到: {display_path}")
                 print("="*80)
                 
-                # 返回包含路径注释的配置
-                return (config_with_path,)
+                # 返回纯配置内容（不带路径注释）
+                return (config_content,)
             except Exception as e:
-                print(f"保存配置文件失败: {str(e)}")
+                print(f"保存评估配置文件失败: {str(e)}")
                 return (config_content,)
             
         except Exception as e:
-            error_msg = f"生成数据集配置失败: {str(e)}"
+            error_msg = f"生成评估数据集配置失败: {str(e)}"
             return (error_msg,)
     
     def _parse_list_input(self, input_str, param_name):
@@ -270,3 +259,5 @@ class GeneralDatasetConfig:
         except Exception as e:
             raise ValueError(f"{param_name} 解析失败: {str(e)}") 
     
+
+
