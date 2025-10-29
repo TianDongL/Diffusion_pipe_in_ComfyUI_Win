@@ -2,7 +2,6 @@ import argparse
 import os
 import sys
 
-# 确保当前目录在Python路径的开头，以便正确导入本地utils模块
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
@@ -348,6 +347,9 @@ if __name__ == '__main__':
     elif model_type == 'hunyuan_image':
         from models import hunyuan_image
         model = hunyuan_image.HunyuanImagePipeline(config)
+    elif model_type == 'auraflow':
+        from models import auraflow
+        model = auraflow.AuraFlowPipeline(config)
     else:
         raise NotImplementedError(f'Model type {model_type} is not implemented')
 

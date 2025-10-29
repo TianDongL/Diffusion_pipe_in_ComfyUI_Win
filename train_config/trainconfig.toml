@@ -28,8 +28,11 @@ betas = [ 0.9, 0.99,]
 weight_decay = 0.01
 
 [model]
-type = 'qwen_image'
-diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusers/Qwen-Image'
+type = 'aura_flow'
+aura_flow_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusers/Qwen-Image'
+text_encoder_path = ''
+vae_path = ''
+max_sequence_length = 768
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
 transformer_dtype = 'float8'

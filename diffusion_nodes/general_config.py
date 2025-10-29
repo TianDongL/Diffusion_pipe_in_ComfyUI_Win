@@ -331,11 +331,9 @@ class GeneralConfig:
                     if os.path.exists(dataset_dir):
                         toml_files = [f for f in os.listdir(dataset_dir) if f.endswith('.toml')]
                         if toml_files:
-                            # 使用最新修改的文件
                             latest_file = max(toml_files, key=lambda f: os.path.getmtime(os.path.join(dataset_dir, f)))
                             dataset_path = os.path.abspath(os.path.join(dataset_dir, latest_file)).replace('\\', '/')
                     
-                    # 方法2：如果没有找到文件，使用默认路径
                     if not dataset_path:
                         # 计算相对于ComfyUI根目录的标准化路径
                         comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
