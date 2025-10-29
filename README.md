@@ -13,6 +13,7 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 ## update
 
 20251026:support eval 
+
 20251030: Supports training Aura models
 
 
