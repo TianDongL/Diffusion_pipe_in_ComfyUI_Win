@@ -233,15 +233,101 @@ class Train:
                 return "ERROR", f"找不到训练脚本: {train_script}"
             
 
-            python_exe = os.path.join(current_dir, "..", "..", "..", "python_embeded_DP", "python.exe")
-            python_exe = os.path.normpath(python_exe)
+            # 智能查找Python解释器
+            def find_python_interpreter():
+                """智能查找可用的Python解释器"""
+                root_dir = os.path.normpath(os.path.join(current_dir, "..", "..", ".."))
+                
+                # 方法1: 检测当前ComfyUI是否在Conda环境中运行
+                conda_prefix = os.environ.get('CONDA_PREFIX')
+                if conda_prefix:
+                    conda_python = os.path.join(conda_prefix, "python.exe")
+                    if os.path.exists(conda_python):
+                        conda_env_name = os.environ.get('CONDA_DEFAULT_ENV', os.path.basename(conda_prefix))
+                        print(f"✓ 检测到Conda环境: {conda_env_name}")
+                        print(f"  Python路径: {conda_python}")
+                        return conda_python
+                
+                # 方法2: 检测是否在虚拟环境中运行（venv/virtualenv）
+                virtual_env = os.environ.get('VIRTUAL_ENV')
+                if virtual_env:
+                    venv_python = os.path.join(virtual_env, "Scripts", "python.exe")
+                    if os.path.exists(venv_python):
+                        print(f"✓ 检测到虚拟环境: {virtual_env}")
+                        print(f"  Python路径: {venv_python}")
+                        return venv_python
+                
+                # 方法3: 动态搜索根目录下所有包含python.exe的文件夹
+                found_pythons = []
+                
+                try:
+                    # 只搜索一级子目录，避免搜索过深
+                    for item in os.listdir(root_dir):
+                        item_path = os.path.join(root_dir, item)
+                        if os.path.isdir(item_path):
+                            # 检查常见的Python路径
+                            possible_paths = [
+                                os.path.join(item_path, "python.exe"),           # 根目录
+                                os.path.join(item_path, "Scripts", "python.exe"), # venv结构
+                                os.path.join(item_path, "bin", "python.exe"),    # Linux-like结构
+                            ]
+                            
+                            for python_path in possible_paths:
+                                if os.path.exists(python_path):
+                                    # 验证是否真的是Python解释器
+                                    try:
+                                        import subprocess
+                                        result = subprocess.run(
+                                            [python_path, "--version"],
+                                            capture_output=True,
+                                            text=True,
+                                            timeout=3
+                                        )
+                                        if result.returncode == 0:
+                                            version = result.stdout.strip() or result.stderr.strip()
+                                            found_pythons.append({
+                                                'path': python_path,
+                                                'env_name': item,
+                                                'version': version
+                                            })
+                                            break  # 找到一个就跳出内层循环
+                                    except:
+                                        pass
+                except Exception as e:
+                    print(f"⚠ 搜索环境时出错: {e}")
+                
+                if found_pythons:
+                    print(f"✓ 找到 {len(found_pythons)} 个Python环境:")
+                    for idx, py in enumerate(found_pythons, 1):
+                        print(f"  {idx}. {py['env_name']} - {py['version']}")
+                    
+                    for py in found_pythons:
+                        if py['env_name'] == 'python_embeded_DP':
+                            print(f" 选择专用训练环境: {py['env_name']}")
+                            return py['path']
+                    
+                    priority_keywords = ['python_embeded', 'python', 'venv', 'env']
+                    for keyword in priority_keywords:
+                        for py in found_pythons:
+                            if keyword in py['env_name'].lower():
+                                print(f"→ 选择环境: {py['env_name']}")
+                                return py['path']
+                    
+                    print(f"→ 选择环境: {found_pythons[0]['env_name']}")
+                    return found_pythons[0]['path']
+                
+                print(f"⚠ 未找到专用环境，使用当前Python解释器")
+                print(f"  路径: {sys.executable}")
+                print(f"  版本: {sys.version.split()[0]}")
+                print(f"  注意: 请确保当前环境已安装所有训练依赖包")
+                return sys.executable
             
-            if not os.path.exists(python_exe):
-                error_msg = f"错误: 未找到便携包Python解释器: {python_exe}"
+            python_exe = find_python_interpreter()
+            
+            if not python_exe or not os.path.exists(python_exe):
+                error_msg = f"错误: 无法找到可用的Python解释器"
                 print(error_msg)
                 return "ERROR", error_msg
-            else:
-                print(f"使用便携包Python解释器: {python_exe}")            
             
             cmd = [
                 python_exe,
