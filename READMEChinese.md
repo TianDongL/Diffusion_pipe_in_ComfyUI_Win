@@ -8,6 +8,8 @@
 
   [![Linux 版本](https://img.shields.io/badge/Linux%20版本-Visit%20Repo-green?style=rounded-pill&logo=github&logoColor=white)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
 
+  [![原项目](https://img.shields.io/badge/Original%20Project-tdrussell's%20diffusion--pipe-purple?labelColor=6c5ce7&color=a29bfe&style=rounded-pill&logo=github&logoColor=white)](https://github.com/tdrussell/diffusion-pipe.git)
+
 </div>
 
 # click to see [English](./README.md)

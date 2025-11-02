@@ -4,7 +4,6 @@ import logging
 from typing import Dict, Any, Tuple
 
 class ModelConfig:
-    """模型配置节点 - 配置训练时的模型参数"""
     
     @classmethod
     def INPUT_TYPES(cls):

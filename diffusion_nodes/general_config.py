@@ -4,17 +4,11 @@ import logging
 from typing import Dict, Any, Tuple
 
 def normalize_windows_path(path):
-    """
-    规范化Windows环境下的路径
-    将WSL路径转换为Windows路径，或保持Windows路径不变
-    """
     if not path:
         return path
         
-    # 将路径转换为Windows格式
     path = str(path).replace('/', '\\')
         
-    # 处理WSL格式的路径转换为Windows路径
     if path.startswith('\\mnt\\'):
         # /mnt/c/path -> C:\path
         parts = path.split('\\')
@@ -23,13 +17,10 @@ def normalize_windows_path(path):
             rest_path = '\\'.join(parts[3:])
             return f"{drive_letter}:\\{rest_path}"
     
-    # 如果路径以\开头但不是UNC路径，可能是WSL路径
     if path.startswith('\\') and not path.startswith('\\\\'):
-        # 假设是根目录下的路径，映射到当前工作目录
         current_dir = os.getcwd()
         return os.path.join(current_dir, path.lstrip('\\'))
     
-    # 规范化路径
     return os.path.normpath(path)
 
 try:
@@ -38,7 +29,6 @@ except ImportError:
     toml = None
 
 class GeneralConfig:
-    """通用训练设置节点 - 配置训练过程中的通用参数"""
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -307,9 +297,7 @@ class GeneralConfig:
                     else:
                         model_dict = model_config
                     
-                    # 将模型配置添加到设置中
                     if isinstance(model_dict, dict):
-                        # 规范化模型配置中的路径
                         normalized_model_dict = self._normalize_paths_in_dict(model_dict)
                         settings["model"] = normalized_model_dict
                         logging.info(f"成功合并模型配置，类型: {normalized_model_dict.get('type', 'unknown')}")
@@ -335,19 +323,16 @@ class GeneralConfig:
                             dataset_path = os.path.abspath(os.path.join(dataset_dir, latest_file)).replace('\\', '/')
                     
                     if not dataset_path:
-                        # 计算相对于ComfyUI根目录的标准化路径
                         comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
                         comfyui_root = os.path.abspath(comfyui_root)
                         default_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
                         dataset_path = os.path.normpath(os.path.abspath(default_dataset_path)).replace('\\', '/')
                     
-                    # 添加数据集引用到配置中
                     settings["dataset"] = dataset_path
                     logging.info(f"数据集配置路径: {dataset_path}")
                     
                 except Exception as e:
                     logging.warning(f"处理数据集配置时出错: {str(e)}")
-                    # 使用默认数据集路径作为后备方案
                     comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
                     comfyui_root = os.path.abspath(comfyui_root)
                     fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
@@ -356,18 +341,14 @@ class GeneralConfig:
                 logging.error("未提供数据集配置，这是必需的参数")
                 raise ValueError("dataset_config是必需参数，必须连接数据集配置节点")
             
-            # 合并适配器配置（如果提供）
             if adapter_config:
                 try:
-                    # 如果adapter_config是字符串，尝试解析为JSON
                     if isinstance(adapter_config, str):
                         adapter_dict = json.loads(adapter_config)
                     else:
                         adapter_dict = adapter_config
                     
-                    # 将适配器配置合并到设置中
                     if isinstance(adapter_dict, dict):
-                        # 规范化适配器配置中的路径
                         normalized_adapter_dict = self._normalize_paths_in_dict(adapter_dict)
                         settings.update(normalized_adapter_dict)
                         logging.info(f"成功合并适配器配置，包含 {len(normalized_adapter_dict)} 个参数")
@@ -378,18 +359,14 @@ class GeneralConfig:
             else:
                 logging.info("未提供适配器配置，将进行全量微调")
             
-            # 合并高级配置（如果提供）
             if advanced_config:
                 try:
-                    # 如果advanced_config是字符串，尝试解析为JSON
                     if isinstance(advanced_config, str):
                         advanced_dict = json.loads(advanced_config)
                     else:
                         advanced_dict = advanced_config
                     
-                    # 将高级配置合并到设置中
                     if isinstance(advanced_dict, dict):
-                        # 规范化高级配置中的路径
                         normalized_advanced_dict = self._normalize_paths_in_dict(advanced_dict)
                         settings.update(normalized_advanced_dict)
                         logging.info(f"成功合并高级配置，包含 {len(normalized_advanced_dict)} 个参数")
@@ -400,10 +377,8 @@ class GeneralConfig:
             else:
                 logging.info("未提供高级配置，使用默认设置")
             
-            # 最终规范化所有路径为正斜杠格式
             settings = self._normalize_paths_in_dict(settings)
             
-            # 输出为TOML格式
             if toml:
                 try:
                     eval_datasets_value = settings.pop('eval_datasets', [])
@@ -444,7 +419,6 @@ class GeneralConfig:
             return ("{}", "", "")
     
     def _format_as_toml(self, settings: dict) -> str:
-        """自定义TOML格式化方法"""
         toml_lines = []
         
         for key, value in settings.items():
@@ -460,7 +434,6 @@ class GeneralConfig:
         return '\n'.join(toml_lines)
     
     def _format_toml_value(self, key: str, value) -> str:
-        """格式化TOML键值对"""
         if isinstance(value, bool):
             return f"{key} = {str(value).lower()}"
         elif isinstance(value, str):
