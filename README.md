@@ -1,6 +1,6 @@
 ![](./img/img.png)
 
-# Diffusion_pipe_in_ComfyUI_Win Custom Node
+# Diffusion pipe in ComfyUI For Windows Custom Node
 
 
 <div align="center">

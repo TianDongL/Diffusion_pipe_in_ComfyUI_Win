@@ -1,6 +1,6 @@
 ![](./img/img.png)
 
- # Diffusion_pipe_in_ComfyUI_Win 自定义节点
+ # Diffusion pip in ComfyUI Win 自定义节点
 
  <div align="center">
 
