@@ -1,6 +1,11 @@
 # Diffusion_pipe_in_ComfyUI_Win Custom Node
 
+[![Portable Environment](https://img.shields.io/badge/Portable%20Environment-Visit%20Repo-blue?style=rounded-pill)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
+
+
 # 点击查看 [中文文档](./READMEChinese.md)
+
+
 
 ## Project Overview
 
