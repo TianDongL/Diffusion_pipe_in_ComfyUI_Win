@@ -1,7 +1,6 @@
-# Diffusion_pipe_in_ComfyUI_Win Custom Node
-
 ![](./img/img.png)
 
+# Diffusion_pipe_in_ComfyUI_Win Custom Node
 
 
 <div align="center">
