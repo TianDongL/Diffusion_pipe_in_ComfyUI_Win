@@ -4,7 +4,7 @@
 
 <div align="center">
 
-  [![便携环境](https://img.shields.io/badge/便携环境-Visit%20Repo-blue?style=rounded-pill&logo=huggingface&logoColor=white)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
+  [![便携环境](https://img.shields.io/badge/HuggingFace-Demo-blue?logo=huggingface)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
 
   [![Linux 版本](https://img.shields.io/badge/Linux%20版本-Visit%20Repo-green?style=rounded-pill&logo=github&logoColor=white)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
   
