@@ -212,7 +212,7 @@ Issues and Pull Requests are welcome!
 
 Thanks to the following projects and teams:
 - ComfyUI team
-- [@tdrussell](https://github.com/tdrussell/diffusion-pipe.git), the original author of Diffusion_Piped
+- [@tdrussell](https://github.com/tdrussell/diffusion-pipe.git), the original author of Diffusion_Pipe
 - Hugging Face Diffusers
 - DeepSpeed team
 - Original authors of all models
