@@ -1,5 +1,16 @@
  # Diffusion_pipe_in_ComfyUI_Win 自定义节点
 
+![](./img/img.png)
+
+ <div align="center">
+
+  [![便携环境](https://img.shields.io/badge/Portable%20Environment-Visit%20Repo-blue?style=rounded-pill)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
+  
+  [![Linux 版本](https://img.shields.io/badge/Linux%20Version-Visit%20Repo-green?style=rounded-pill)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
+
+</div>
+
+
 # click to see [English](./README.md)
 
 ## 项目简介

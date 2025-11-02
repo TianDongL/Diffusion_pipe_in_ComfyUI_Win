@@ -1,9 +1,13 @@
 # Diffusion_pipe_in_ComfyUI_Win Custom Node
 
+![](./img/img.png)
+
+
+
 <div align="center">
 
   [![Portable Environment](https://img.shields.io/badge/Portable%20Environment-Visit%20Repo-blue?style=rounded-pill)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
-  
+
   [![Linux Version](https://img.shields.io/badge/Linux%20Version-Visit%20Repo-green?style=rounded-pill)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
 
 </div>
