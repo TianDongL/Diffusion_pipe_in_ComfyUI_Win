@@ -5,9 +5,9 @@
 
 <div align="center">
   
-  [![Portable Environment](https://img.shields.io/badge/HuggingFace-Demo-blue?logo=huggingface)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
+  [![Portable Environment](https://img.shields.io/badge/Portable%20Environment-Visit%20Repo-blue?style=rounded-pill&logo=huggingface)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
 
-  [![Linux Version](https://img.shields.io/badge/Linux%20Version-Visit%20Repo-green?style=rounded-pill&logo=github&logoColor=white)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
+  [![Linux Version](https://img.shields.io/badge/Linux%20Version-Visit%20Repo-green?style=rounded-pill&logo=github)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
 
 
 </div>
