@@ -26,9 +26,11 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 ## 更新日志 
 
-20251026:评估支持
+* 20251026:评估支持
 
-20251030:支持aura模型训练
+* 20251030:支持aura模型训练
+
+* 20251103：支持多图像编辑（qwen2509）
 
 # 快速开始
 ## 你可以使用我的配置好的便携式环境包：
@@ -137,7 +139,7 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 
 为了让你快速开始，我提供了预配置的 ComfyUI 工作流文件：
 
-***[📋 点击导入完整工作流](./example_workflows/examworkflow_DP.json)***
+***[📋 点击导入完整工作流](./example_workflows/DiffusionPipeInComfyUIWin.json)***
 
 将此文件拖拽到 ComfyUI 界面中即可导入完整的训练工作流，包含所有必要的节点配置。
 

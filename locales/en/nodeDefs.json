@@ -29,7 +29,7 @@
       },
       "gradient_accumulation_steps": {
         "name": "Gradient Accumulation Steps",
-        "tooltip": "Gradient accumulation steps, 0 means auto calculate"
+        "tooltip": "Gradient accumulation steps"
       },
       "gradient_clipping": {
         "name": "Gradient Clipping",
@@ -340,6 +340,22 @@
       "0": {
         "name": "Model Path",
         "tooltip": "Wan2.1 model configuration"
+      }
+    }
+  },
+  "MultiImageEditDatasetPathNode": {
+    "display_name": "Multi Image Edit Dataset Path",
+    "description": "Configure multi image edit dataset path",
+    "inputs": {
+      "target_path": {
+        "name": "Target Path",
+        "tooltip": "Target image path - the model will learn to generate images from this path"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Input Path",
+        "tooltip": "Return multi image edit dataset path configuration"
       }
     }
   },

@@ -29,9 +29,11 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 ## update
 
-20251026:support eval 
+* 20251026:support eval 
 
-20251030: Supports training Aura models
+* 20251030: Supports training Aura models
+
+* 20251103:support MultiImage Edit (qwen2509)
 
 
 # Quick Start
@@ -135,7 +137,7 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 
 To get you started quickly, I've provided a pre-configured ComfyUI workflow file:
 
-***[📋 Click to Import Complete Workflow](./example_workflows/examworkflow_DP.json)***
+***[📋 Click to Import Complete Workflow](./example_workflows/DiffusionPipeInComfyUIWin.json)***
 
 Simply drag this file into the ComfyUI interface to import the complete training workflow with all necessary node configurations.
 

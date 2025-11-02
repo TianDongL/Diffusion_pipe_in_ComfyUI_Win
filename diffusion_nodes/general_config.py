@@ -68,14 +68,14 @@ class GeneralConfig:
                     "default": 4, 
                     "min": 1, 
                     "max": 64,
-                    "tooltip": "梯度累积步数，0表示自动计算"
+                    "tooltip": "梯度累积步数"
                 }),
                 "gradient_clipping": ("FLOAT", {
                     "default": 1.0, 
                     "min": 1.0, 
                     "max": 10.0, 
                     "step": 0.1,
-                    "tooltip": "梯度裁剪阈值，防止梯度爆炸。推荐值：1.0。设为0表示不裁剪"
+                    "tooltip": "梯度裁剪阈值，防止梯度爆炸。"
                 }),
                 "warmup_steps": ("INT", {
                     "default": 500, 

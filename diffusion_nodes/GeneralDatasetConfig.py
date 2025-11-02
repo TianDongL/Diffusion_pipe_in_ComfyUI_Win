@@ -92,11 +92,13 @@ class GeneralDatasetConfig:
         try:
             dataset_path = None
             control_path = None
+            control_paths = None
             is_edit_model = False
             
             if isinstance(input_path, dict):
                 dataset_path = input_path.get("path")
                 control_path = input_path.get("control_path")
+                control_paths = input_path.get("control_paths")
                 is_edit_model = True
             elif isinstance(input_path, str):
                 dataset_path = input_path
@@ -139,8 +141,18 @@ class GeneralDatasetConfig:
             if frame_buckets_list is not None:
                 config_lines.append(f"frame_buckets = {frame_buckets_list}")
             
-            if control_path:
-
+            if control_paths:
+                normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\target\\images"
+                config_lines.extend([
+                    "[[directory]]",
+                    f"path = '{normalized_dataset_path}'",
+                ])
+                
+                normalized_control_paths = [normalize_windows_path(cp) for cp in control_paths]
+                config_lines.append(f"control_paths = {normalized_control_paths}")
+                config_lines.append(f"num_repeats = {num_repeats}")
+            
+            elif control_path:
                 normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\target\\images"
                 normalized_control_path = normalize_windows_path(control_path) if control_path else "C:\\path\\to\\control\\images"
                 config_lines.extend([
@@ -149,6 +161,7 @@ class GeneralDatasetConfig:
                     f"control_path = '{normalized_control_path}'",
                     f"num_repeats = {num_repeats}",
                 ])
+            
             else:
                 normalized_dataset_path = normalize_windows_path(dataset_path) if dataset_path else "C:\\path\\to\\your\\dataset"
                 config_lines.extend([
