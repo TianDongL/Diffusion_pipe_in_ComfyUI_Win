@@ -1,4 +1,4 @@
-eval_datasets = []
+eval_datasets = [{name = 'validation_set', config = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win/dataset/evaldataset.toml'}]
 epochs = 192
 micro_batch_size_per_gpu = 1
 gradient_accumulation_steps = 1
