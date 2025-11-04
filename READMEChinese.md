@@ -159,11 +159,13 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 *调试时禁用Train节点*
 
 ![模型配置](./img/33.png)
-
+模型配置
 
 ![数据集配置](./img/44.png)
+数据集配置
 
 ![工作流总览](./img/55.png)
+工作流总览
 
 ![监控选项](./img/66.png)
 *kill port会停止当前端口一切监控进程*

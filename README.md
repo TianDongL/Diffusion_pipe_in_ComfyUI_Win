@@ -156,11 +156,13 @@ Models can be stored in the ComfyUI model directory
 *Disable the Train node when debugging*
 
 ![Model Configuration](./img/33.png)
-
+Model Configuration
 
 ![Dataset Configuration](./img/44.png)
+Dataset Configuration
 
 ![Workflow Overview](./img/55.png)
+Workflow Overview
 
 ![Monitoring Options](./img/66.png)
 *kill port will stop all monitoring processes on the current port*
