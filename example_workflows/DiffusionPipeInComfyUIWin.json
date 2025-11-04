@@ -1,8 +1,8 @@
 {
   "id": "1afaaa0d-72d4-449a-b333-e305b5d30960",
   "revision": 0,
-  "last_node_id": 314,
-  "last_link_id": 494,
+  "last_node_id": 321,
+  "last_link_id": 495,
   "nodes": [
     {
       "id": 146,
@@ -171,7 +171,7 @@
         26
       ],
       "flags": {},
-      "order": 42,
+      "order": 45,
       "mode": 0,
       "inputs": [
         {
@@ -523,42 +523,6 @@
       "bgcolor": "#653"
     },
     {
-      "id": 180,
-      "type": "PreviewAny",
-      "pos": [
-        -1370,
-        -1380
-      ],
-      "size": [
-        537.2894287109375,
-        652.601318359375
-      ],
-      "flags": {},
-      "order": 45,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "source",
-          "type": "*",
-          "link": 469
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.57",
-        "Node name for S&R": "PreviewAny",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 281,
       "type": "SDXLModelNode",
       "pos": [
@@ -606,8 +570,8 @@
       "id": 188,
       "type": "PreviewAny",
       "pos": [
-        -1920,
-        -1010
+        -1960,
+        -1100
       ],
       "size": [
         518.5387573242188,
@@ -616,7 +580,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 46,
+      "order": 49,
       "mode": 0,
       "inputs": [
         {
@@ -641,45 +605,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 75,
-      "type": "GeneralDatasetPathNode",
-      "pos": [
-        -5630,
-        -1200
-      ],
-      "size": [
-        740,
-        58
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "input_path",
-          "type": "input_path",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "GeneralDatasetPathNode",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
       "id": 231,
       "type": "PrimitiveString",
       "pos": [
@@ -691,7 +616,7 @@
         58
       ],
       "flags": {},
-      "order": 14,
+      "order": 13,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -731,7 +656,7 @@
         200
       ],
       "flags": {},
-      "order": 47,
+      "order": 50,
       "mode": 0,
       "inputs": [
         {
@@ -776,7 +701,7 @@
         200
       ],
       "flags": {},
-      "order": 48,
+      "order": 51,
       "mode": 0,
       "inputs": [
         {
@@ -804,124 +729,10 @@
         }
       },
       "widgets_values": [
-        "运行中 (Running) - PID: 44152\n运行时间 (Runtime): 00:00:05\n监控目录 (Monitor Dir): ComfyUI\\output\\123\\20251102_16-55-05\n访问地址 (Access URL): http://localhost:4666\n发现 1 个事件文件 (Found 1 event files):\n   • events.out.tfevents.1762102517.BEIMENPANYAN.61336.0"
+        "运行中 (Running) - PID: 24708\n运行时间 (Runtime): 00:00:05\n监控目录 (Monitor Dir): ComfyUI\\output\\123\\20251102_17-35-22\n访问地址 (Access URL): http://localhost:4666\n发现 1 个事件文件 (Found 1 event files):\n   • events.out.tfevents.1762104937.BEIMENPANYAN.7328.0"
       ],
       "color": "#322",
       "bgcolor": "#533"
-    },
-    {
-      "id": 300,
-      "type": "Train",
-      "pos": [
-        -1912.5,
-        -1378
-      ],
-      "size": [
-        250,
-        242
-      ],
-      "flags": {},
-      "order": 43,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "dataset_config",
-          "type": "DATASET_CONFIG",
-          "link": 466
-        },
-        {
-          "name": "train_config",
-          "type": "TRAIN_CONFIG",
-          "link": 467
-        },
-        {
-          "name": "config_path",
-          "type": "config_path",
-          "link": 468
-        }
-      ],
-      "outputs": [
-        {
-          "name": "status",
-          "type": "STRING",
-          "links": [
-            469
-          ]
-        },
-        {
-          "name": "log_output",
-          "type": "STRING",
-          "links": [
-            470
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "Train",
-        "ue_properties": {
-          "widget_ue_connectable": {},
-          "version": "7.1",
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "",
-        false,
-        false,
-        false,
-        false,
-        false,
-        ""
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 279,
-      "type": "easy showAnything",
-      "pos": [
-        -2650,
-        -1440
-      ],
-      "size": [
-        540,
-        190
-      ],
-      "flags": {},
-      "order": 35,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "输入任何",
-          "name": "anything",
-          "shape": 7,
-          "type": "*",
-          "link": 489
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "*",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-easy-use",
-        "ver": "f550ce83a84114b0eeae5510679910e914f5d514",
-        "Node name for S&R": "easy showAnything",
-        "ue_properties": {
-          "widget_ue_connectable": {},
-          "version": "7.1",
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "{\"type\": \"qwen_image\", \"diffusers_path\": \"E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\models\\\\diffusion_models\\\\Qwen-Image-Edit-2509\", \"transformer_path\": \"E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\models\\\\diffusion_models\\\\qwen_edit\\\\qwen_image_edit_2509_bf16.safetensors\"}"
-      ]
     },
     {
       "id": 151,
@@ -935,7 +746,7 @@
         106
       ],
       "flags": {},
-      "order": 15,
+      "order": 14,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -976,7 +787,7 @@
         130
       ],
       "flags": {},
-      "order": 16,
+      "order": 15,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1020,7 +831,7 @@
         82
       ],
       "flags": {},
-      "order": 17,
+      "order": 16,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1060,7 +871,7 @@
         640
       ],
       "flags": {},
-      "order": 18,
+      "order": 17,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -1089,7 +900,7 @@
         640
       ],
       "flags": {},
-      "order": 19,
+      "order": 18,
       "mode": 0,
       "inputs": [],
       "outputs": [],
@@ -1118,7 +929,7 @@
         106
       ],
       "flags": {},
-      "order": 20,
+      "order": 19,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1159,7 +970,7 @@
         106
       ],
       "flags": {},
-      "order": 21,
+      "order": 20,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1200,7 +1011,7 @@
         160
       ],
       "flags": {},
-      "order": 22,
+      "order": 21,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1243,7 +1054,7 @@
         154
       ],
       "flags": {},
-      "order": 23,
+      "order": 22,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1280,55 +1091,6 @@
       "bgcolor": "#3f5159"
     },
     {
-      "id": 176,
-      "type": "ModelConfig",
-      "pos": [
-        -3470,
-        -1160
-      ],
-      "size": [
-        300,
-        106
-      ],
-      "flags": {},
-      "order": 34,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model_path",
-          "type": "model_path",
-          "link": 488
-        }
-      ],
-      "outputs": [
-        {
-          "name": "model_config",
-          "type": "model_config",
-          "links": [
-            430
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "ModelConfig",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "bfloat16",
-        "float8",
-        "logit_normal"
-      ],
-      "color": "#223",
-      "bgcolor": "#335"
-    },
-    {
       "id": 174,
       "type": "OptimizerConfigNode",
       "pos": [
@@ -1340,7 +1102,7 @@
         178
       ],
       "flags": {},
-      "order": 24,
+      "order": 23,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1375,193 +1137,6 @@
       "bgcolor": "#335"
     },
     {
-      "id": 90,
-      "type": "FrameBucketsNode",
-      "pos": [
-        -5560,
-        -750
-      ],
-      "size": [
-        440,
-        60
-      ],
-      "flags": {},
-      "order": 25,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "frame_buckets",
-          "type": "frame_buckets",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "FrameBucketsNode",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "[1, 33, 65, 97]"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 177,
-      "type": "GeneralDatasetConfig",
-      "pos": [
-        -4800,
-        -1200
-      ],
-      "size": [
-        480,
-        220
-      ],
-      "flags": {},
-      "order": 33,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "input_path",
-          "type": "input_path",
-          "link": 492
-        },
-        {
-          "name": "frame_buckets",
-          "shape": 7,
-          "type": "frame_buckets",
-          "link": null
-        },
-        {
-          "name": "ar_buckets",
-          "shape": 7,
-          "type": "ar_buckets",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "dataset_config",
-          "type": "DATASET_CONFIG",
-          "links": [
-            428,
-            431,
-            466
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "GeneralDatasetConfig",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "[512,512]",
-        true,
-        0.5,
-        2,
-        3,
-        5
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 216,
-      "type": "EditModelDatasetPathNode",
-      "pos": [
-        -5620,
-        -1080
-      ],
-      "size": [
-        770,
-        82
-      ],
-      "flags": {},
-      "order": 26,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "input_path",
-          "type": "input_path",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "EditModelDatasetPathNode",
-        "ue_properties": {
-          "widget_ue_connectable": {
-            "target_path": true,
-            "control_path": true
-          },
-          "version": "7.1",
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test",
-        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test1"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 91,
-      "type": "ArBucketsNode",
-      "pos": [
-        -5110,
-        -750
-      ],
-      "size": [
-        440,
-        60
-      ],
-      "flags": {},
-      "order": 27,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "ar_buckets",
-          "type": "ar_buckets",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI",
-        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
-        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
-        "Node name for S&R": "ArBucketsNode",
-        "ue_properties": {
-          "version": "7.1",
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "[[720,720]]"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
       "id": 314,
       "type": "Reroute",
       "pos": [
@@ -1573,7 +1148,7 @@
         26
       ],
       "flags": {},
-      "order": 40,
+      "order": 41,
       "mode": 0,
       "inputs": [
         {
@@ -1611,7 +1186,7 @@
         150
       ],
       "flags": {},
-      "order": 44,
+      "order": 47,
       "mode": 0,
       "inputs": [
         {
@@ -1673,7 +1248,7 @@
         346
       ],
       "flags": {},
-      "order": 28,
+      "order": 24,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1725,7 +1300,7 @@
         130
       ],
       "flags": {},
-      "order": 29,
+      "order": 25,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1762,14 +1337,14 @@
       "type": "easy showAnything",
       "pos": [
         -4280,
-        -1190
+        -1220
       ],
       "size": [
         650,
         240
       ],
       "flags": {},
-      "order": 37,
+      "order": 42,
       "mode": 0,
       "inputs": [
         {
@@ -1797,47 +1372,7 @@
         }
       },
       "widgets_values": [
-        "resolutions = [512, 512]\nenable_ar_bucket = true\nmin_ar = 0.5\nmax_ar = 2.0\nnum_ar_buckets = 3\n[[directory]]\npath = 'E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test'\ncontrol_paths = ['E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\custom_nodes\\\\Diffusion_pipe_in_ComfyUI_Win\\\\input\\\\test1', 'E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\custom_nodes\\\\Diffusion_pipe_in_ComfyUI_Win\\\\input\\\\test2']\nnum_repeats = 5"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 312,
-      "type": "MultiImageEditDatasetPathNode",
-      "pos": [
-        -5590,
-        -950
-      ],
-      "size": [
-        720,
-        112
-      ],
-      "flags": {},
-      "order": 30,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "input_path",
-          "type": "input_path",
-          "links": [
-            492
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "Diffusion_pipe_in_ComfyUI_Win",
-        "ver": "fdcef80fa62bbda801dfd2fdae70f0be5a8dd70a",
-        "ue_properties": {
-          "widget_ue_connectable": {},
-          "input_ue_unconnectable": {},
-          "version": "7.4.1"
-        }
-      },
-      "widgets_values": [
-        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test",
-        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test1\nE:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test2\n"
+        "resolutions = [512, 512]\nenable_ar_bucket = true\nmin_ar = 0.5\nmax_ar = 2.0\nnum_ar_buckets = 3\n[[directory]]\npath = 'E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test'\nnum_repeats = 5"
       ],
       "color": "#432",
       "bgcolor": "#653"
@@ -1854,7 +1389,7 @@
         610
       ],
       "flags": {},
-      "order": 41,
+      "order": 44,
       "mode": 0,
       "inputs": [
         {
@@ -1899,7 +1434,7 @@
         130
       ],
       "flags": {},
-      "order": 31,
+      "order": 26,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1942,15 +1477,15 @@
       "id": 302,
       "type": "GeneralDatasetPathNode",
       "pos": [
-        -5590,
-        -540
+        -6280,
+        -550
       ],
       "size": [
         740,
         58
       ],
       "flags": {},
-      "order": 32,
+      "order": 27,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1983,15 +1518,15 @@
       "id": 306,
       "type": "EvalDatasetConfig",
       "pos": [
-        -4830,
-        -540
+        -5520,
+        -550
       ],
       "size": [
         490,
         218
       ],
       "flags": {},
-      "order": 36,
+      "order": 38,
       "mode": 0,
       "inputs": [
         {
@@ -2053,15 +1588,15 @@
       "id": 303,
       "type": "easy showAnything",
       "pos": [
-        -4270,
-        -540
+        -4960,
+        -550
       ],
       "size": [
         530,
         440
       ],
       "flags": {},
-      "order": 39,
+      "order": 40,
       "mode": 0,
       "inputs": [
         {
@@ -2106,7 +1641,7 @@
         614
       ],
       "flags": {},
-      "order": 38,
+      "order": 43,
       "mode": 0,
       "inputs": [
         {
@@ -2223,6 +1758,541 @@
       ],
       "color": "#223",
       "bgcolor": "#335"
+    },
+    {
+      "id": 176,
+      "type": "ModelConfig",
+      "pos": [
+        -3160,
+        -1180
+      ],
+      "size": [
+        300,
+        106
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_path",
+          "type": "model_path",
+          "link": 488
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model_config",
+          "type": "model_config",
+          "links": [
+            430
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "ModelConfig",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "bfloat16",
+        "float8",
+        "logit_normal"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 279,
+      "type": "easy showAnything",
+      "pos": [
+        -2630,
+        -1470
+      ],
+      "size": [
+        540,
+        190
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入任何",
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 489
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "f550ce83a84114b0eeae5510679910e914f5d514",
+        "Node name for S&R": "easy showAnything",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "{\"type\": \"qwen_image\", \"diffusers_path\": \"E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\models\\\\diffusion_models\\\\Qwen-Image-Edit-2509\", \"transformer_path\": \"E:\\\\comfyuiMQ\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\models\\\\diffusion_models\\\\qwen_edit\\\\qwen_image_edit_2509_bf16.safetensors\"}"
+      ]
+    },
+    {
+      "id": 180,
+      "type": "PreviewAny",
+      "pos": [
+        -1410,
+        -1470
+      ],
+      "size": [
+        537.2894287109375,
+        652.601318359375
+      ],
+      "flags": {},
+      "order": 48,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 469
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.57",
+        "Node name for S&R": "PreviewAny",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 300,
+      "type": "Train",
+      "pos": [
+        -1950,
+        -1470
+      ],
+      "size": [
+        250,
+        266
+      ],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "dataset_config",
+          "type": "DATASET_CONFIG",
+          "link": 466
+        },
+        {
+          "name": "train_config",
+          "type": "TRAIN_CONFIG",
+          "link": 467
+        },
+        {
+          "name": "config_path",
+          "type": "config_path",
+          "link": 468
+        }
+      ],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": [
+            469
+          ]
+        },
+        {
+          "name": "log_output",
+          "type": "STRING",
+          "links": [
+            470
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "Train",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "",
+        false,
+        false,
+        false,
+        false,
+        false,
+        "",
+        true
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 177,
+      "type": "GeneralDatasetConfig",
+      "pos": [
+        -4800,
+        -1230
+      ],
+      "size": [
+        480,
+        220
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input_path",
+          "type": "input_path",
+          "link": 495
+        },
+        {
+          "name": "frame_buckets",
+          "shape": 7,
+          "type": "frame_buckets",
+          "link": null
+        },
+        {
+          "name": "ar_buckets",
+          "shape": 7,
+          "type": "ar_buckets",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "dataset_config",
+          "type": "DATASET_CONFIG",
+          "links": [
+            428,
+            431,
+            466
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "GeneralDatasetConfig",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "[512,512]",
+        true,
+        0.5,
+        2,
+        3,
+        5
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 90,
+      "type": "FrameBucketsNode",
+      "pos": [
+        -5400,
+        -1080
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "frame_buckets",
+          "type": "frame_buckets",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "FrameBucketsNode",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "[1, 33, 65, 97]"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 75,
+      "type": "GeneralDatasetPathNode",
+      "pos": [
+        -5610,
+        -1220
+      ],
+      "size": [
+        740,
+        58
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "input_path",
+          "type": "input_path",
+          "links": [
+            495
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "GeneralDatasetPathNode",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 216,
+      "type": "EditModelDatasetPathNode",
+      "pos": [
+        -6330,
+        -1190
+      ],
+      "size": [
+        710,
+        82
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "input_path",
+          "type": "input_path",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "EditModelDatasetPathNode",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "target_path": true,
+            "control_path": true
+          },
+          "version": "7.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test",
+        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test1"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 312,
+      "type": "MultiImageEditDatasetPathNode",
+      "pos": [
+        -6310,
+        -1000
+      ],
+      "size": [
+        620,
+        112
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "input_path",
+          "type": "input_path",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI_Win",
+        "ver": "fdcef80fa62bbda801dfd2fdae70f0be5a8dd70a",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.4.1"
+        }
+      },
+      "widgets_values": [
+        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test",
+        "E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test1\nE:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test2\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 91,
+      "type": "ArBucketsNode",
+      "pos": [
+        -5110,
+        -1070
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "ar_buckets",
+          "type": "ar_buckets",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "Diffusion_pipe_in_ComfyUI",
+        "ver": "3a3b86a2487387147f0146233ab8716bbe3aab0f",
+        "aux_id": "TianDongL/Diffusion_pipe_in_ComfyUI",
+        "Node name for S&R": "ArBucketsNode",
+        "ue_properties": {
+          "version": "7.1",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        " [1.0, 1.5]"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 320,
+      "type": "MarkdownNote",
+      "pos": [
+        -7140,
+        -1280
+      ],
+      "size": [
+        760,
+        630
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "\n\n# ar buckets（aspect ratio buckets）配置逻辑\n\n\n\n## ar buckets的配置有两种方式：**自动分组**（按范围生成）和**手动分组**（直接指定）。  \n\n\n\n### 1.1 自动分组（通过范围和数量生成）\n\n\n\n通过设置宽高比范围和桶数量，自动生成均匀分布的分组（默认按对数间隔，使不同比例素材分布更均衡）。  \n\n\n\n关键参数（对应配置文件）：  \n\n\n\n```\n# 启用宽高比分组\nenable_ar_bucket = true\n\n# 宽高比范围（宽/高）：最小0.5（竖屏2:1）、最大2.0（横屏2:1）\nmin_ar = 0.5\nmax_ar = 2.0\n\n# 在0.5~2.0之间生成7个桶（对数间隔均匀分布）\nnum_ar_buckets = 7\n\n```\n\n\n\n示例（7个桶可能覆盖的宽高比）：  \n\n\n\n0.5（2:1竖）、0.65（3:2竖）、0.8（4:5竖）、1.0（1:1 square）、1.25（5:4横）、1.5（3:2横）、2.0（2:1横）。  \n\n\n\n### 1.2 手动分组（直接指定具体宽高比）\n\n\n\n若需精确控制分组，可手动指定每个桶的宽高比（两种格式，不可混合）。  \n\n\n\n配置示例：  \n\n\n\n```\n\n# 方式1：直接写宽高比数值（如1.0=1:1，1.5=3:2）\nar_buckets = [1.0, 1.5]\n\n# 方式2：写（宽，高）对（系统自动计算宽高比，如[448,576]≈0.778=7:9）\nar_buckets = [[512, 512], [448, 576]]\n\n```\n\n\n\n⚠️ 注意：手动指定时，不能混合“数值”和“（宽，高）对”，否则会报错。  \n\n\n\n## 2. 与分辨率（resolutions）的配合\n\n\n\nar buckets仅负责“宽高比分组”，而每个组的最终尺寸由`resolutions`（像素面积）决定。  \n\n\n\n示例：  \n\n\n\n若`resolutions = [512]`（总像素面积≈512×512=262144）：  \n\n\n\n- 1:1的桶（ar=1.0）→ 缩放到512×512；  \n\n- 2:1横屏的桶（ar=2.0）→ 缩放到~724×362（724×362≈262144，且宽/高=2.0）；  \n\n- 1:2竖屏的桶（ar=0.5）→ 缩放到~362×724（满足面积和宽高比）。  \n\n\n\n\n\n\n## 附：常用配置模板\n\n\n\n### 模板1：自动分组（适合多样化素材）\n\n\n\n```\n\nenable_ar_bucket = true\nmin_ar = 0.5       # 最小宽高比（竖屏2:1）\nmax_ar = 2.0       # 最大宽高比（横屏2:1）\nnum_ar_buckets = 5 # 生成5个桶（覆盖常见比例）\nresolutions = [512] # 目标像素面积（512×512）\n\n```\n\n\n\n### 模板2：手动分组（适合固定比例素材，如全是16:9视频）\n\n\n\n```\n\nenable_ar_bucket = true\nar_buckets = [[1920, 1080]] # 16:9宽高比（1920/1080≈1.778）\nresolutions = [[1280, 720]] # 缩放到1280×720（保持16:9）\n\n```\n\n\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 321,
+      "type": "MarkdownNote",
+      "pos": [
+        -7160,
+        -570
+      ],
+      "size": [
+        760,
+        630
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# ar buckets (aspect ratio buckets) Configuration Logic\n\n## There are two configuration methods for ar buckets: **automatic grouping** (generated by range) and **manual grouping** (specified directly).\n\n### 1.1 Automatic Grouping (Generated by Range and Quantity)\n\nBy setting the aspect ratio range and the number of buckets, uniformly distributed groups are automatically generated (logarithmic intervals are used by default to ensure more balanced distribution of materials with different ratios).\n\nKey parameters (corresponding to the configuration file):\n\n```\n\n# Enable aspect ratio bucketing\nenable_ar_bucket = true\n\n# Aspect ratio range (width/height): minimum 0.5 (2:1 vertical screen), maximum 2.0 (2:1 horizontal screen)\nmin_ar = 0.5\nmax_ar = 2.0\n\n# Generate 7 buckets between 0.5 and 2.0 (evenly distributed at logarithmic intervals)\nnum_ar_buckets = 7\n```\n\nExample (aspect ratios that 7 buckets may cover):\n\n0.5 (2:1 vertical), 0.65 (3:2 vertical), 0.8 (4:5 vertical), 1.0 (1:1 square), 1.25 (5:4 horizontal), 1.5 (3:2 horizontal), 2.0 (2:1 horizontal).\n\n### 1.2 Manual Grouping (Specify Specific Aspect Ratios Directly)\n\nFor precise control over grouping, you can manually specify the aspect ratio for each bucket (two formats, which cannot be mixed).\n\nConfiguration example:\n\n```\n\n# Method 1: Directly write aspect ratio values (e.g., 1.0 = 1:1, 1.5 = 3:2)\nar_buckets = [1.0, 1.5]\n\n# Method 2: Write (width, height) pairs (the system automatically calculates the aspect ratio, e.g., [448, 576] ≈ 0.778 = 7:9)\nar_buckets = [[512, 512], [448, 576]]\n```\n\n⚠️ Note: When specifying manually, \"numeric values\" and \"(width, height) pairs\" cannot be mixed, otherwise an error will occur.\n\n## 2. Coordination with Resolutions\n\nar buckets only handle \"aspect ratio grouping\", while the final size of each group is determined by `resolutions` (pixel area).\n\nExample:\n\nIf `resolutions = [512]` (total pixel area ≈ 512×512 = 262,144):\n\n- Bucket with 1:1 aspect ratio (ar=1.0) → scaled to 512×512;\n\n- Bucket with 2:1 horizontal aspect ratio (ar=2.0) → scaled to ~724×362 (724×362 ≈ 262,144, and width/height = 2.0);\n\n- Bucket with 1:2 vertical aspect ratio (ar=0.5) → scaled to ~362×724 (meets both area and aspect ratio requirements).\n\n## Appendix: Common Configuration Templates\n\n### Template 1: Automatic Grouping (Suitable for Diverse Materials)\n\n```\n\nenable_ar_bucket = true\nmin_ar = 0.5       # Minimum aspect ratio (2:1 vertical screen)\nmax_ar = 2.0       # Maximum aspect ratio (2:1 horizontal screen)\nnum_ar_buckets = 5 # Generate 5 buckets (cover common ratios)\nresolutions = [512] # Target pixel area (512×512)\n```\n\n### Template 2: Manual Grouping (Suitable for Fixed-Ratio Materials, e.g., All 16:9 Videos)\n\n```\n\nenable_ar_bucket = true\nar_buckets = [[1920, 1080]] # 16:9 aspect ratio (1920/1080 ≈ 1.778)\nresolutions = [[1280, 720]] # Scaled to 1280×720 (maintain 16:9)\n```\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 319,
+      "type": "Note",
+      "pos": [
+        -5120,
+        -960
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "使用 [1, 1.5]时，会报错\n\n也可以写 [[512, 512], [448, 576]]"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
     }
   ],
   "links": [
@@ -2387,20 +2457,20 @@
       "*"
     ],
     [
-      492,
-      312,
-      0,
-      177,
-      0,
-      "input_path"
-    ],
-    [
       494,
       306,
       0,
       314,
       0,
       "*"
+    ],
+    [
+      495,
+      75,
+      0,
+      177,
+      0,
+      "input_path"
     ]
   ],
   "groups": [
@@ -2408,10 +2478,10 @@
       "id": 1,
       "title": "dateset",
       "bounding": [
-        -5660,
-        -1300,
-        2070,
-        1250
+        -6350,
+        -1310,
+        2790,
+        1330
       ],
       "color": "#3f789e",
       "font_size": 24,
@@ -2447,8 +2517,8 @@
       "id": 4,
       "title": "go train",
       "bounding": [
-        -1960,
-        -1450,
+        -2000,
+        -1540,
         1190,
         1050
       ],
@@ -2474,10 +2544,10 @@
   "extra": {
     "ue_links": [],
     "ds": {
-      "scale": 0.8390545288824038,
+      "scale": 0.3422203881055004,
       "offset": [
-        5198.516997392852,
-        1524.6589793201651
+        6154.524282642794,
+        3498.583107095619
       ]
     },
     "links_added_by_ue": [],
