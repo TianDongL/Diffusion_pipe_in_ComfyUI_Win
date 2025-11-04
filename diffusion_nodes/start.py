@@ -81,7 +81,11 @@ class Train:
                 }),
                 "dump_dataset": ("STRING", {
                     "default": "",
-                    "tooltip": "将数据集导出到指定路径（调试用，导出后立即退出）"
+                    "tooltip": "将数据集导出到指定路径（调试用）"
+                }),
+                "reset_optimizer_params": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "重置优化器状态（在从检查点恢复时使用）"
                 }),
             }
         }
@@ -91,9 +95,9 @@ class Train:
     FUNCTION = "execute"
     CATEGORY = "Diffusion-Pipe/Train"
     
-    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset=""):
+    def execute(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset="", reset_optimizer_params=False):
         """ComfyUI节点的执行入口"""
-        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint, reset_dataloader, regenerate_cache, trust_cache, cache_only, i_know_what_i_am_doing, dump_dataset)
+        return self.start_training(dataset_config, train_config, config_path, resume_from_checkpoint, reset_dataloader, regenerate_cache, trust_cache, cache_only, i_know_what_i_am_doing, dump_dataset, reset_optimizer_params)
     
     def normalize_windows_path(self, path):
         """规范化Windows环境下的路径"""
@@ -172,7 +176,7 @@ class Train:
             print(error_msg)
             log_queue.put(error_msg)
 
-    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset=""):
+    def start_training(self, dataset_config, train_config, config_path, resume_from_checkpoint="", reset_dataloader=False, regenerate_cache=False, trust_cache=False, cache_only=False, i_know_what_i_am_doing=False, dump_dataset="", reset_optimizer_params=False):
         """启动训练进程"""
         try:
             # 检查是否已有训练进程在运行
@@ -350,6 +354,10 @@ class Train:
             if reset_dataloader:
                 cmd.append("--reset_dataloader")
             
+            # 添加 reset_optimizer_params 参数
+            if reset_optimizer_params:
+                cmd.append("--reset_optimizer_params")
+            
             # 添加 cache_only 参数
             if cache_only:
                 cmd.append("--cache_only")
@@ -358,35 +366,9 @@ class Train:
             if i_know_what_i_am_doing:
                 cmd.append("--i_know_what_i_am_doing")
             
-            # 添加 dump_dataset 参数（优先使用节点参数）
+            # 添加 dump_dataset 参数
             if dump_dataset and dump_dataset.strip():
                 cmd.extend(["--dump_dataset", dump_dataset.strip()])
-            
-            # 处理高级配置中的命令行参数（向后兼容，但节点参数优先）
-            train_cmd_args = train_config.get('_train_cmd_args', {})
-            if train_cmd_args:
-                # resume_from_checkpoint 参数（仅在节点未提供时使用）
-                if 'resume_from_checkpoint' in train_cmd_args and not resume_from_checkpoint:
-                    resume_value = train_cmd_args['resume_from_checkpoint']
-                    if isinstance(resume_value, bool) and resume_value:
-                        cmd.append("--resume_from_checkpoint")
-                    elif isinstance(resume_value, str):
-                        cmd.extend(["--resume_from_checkpoint", resume_value])
-                
-                bool_args = ['reset_dataloader', 'cache_only', 'i_know_what_i_am_doing']
-                for arg in bool_args:
-                    if train_cmd_args.get(arg, False):
-                        # 避免重复添加（节点参数已处理的情况）
-                        if f"--{arg}" not in cmd:
-                            cmd.append(f"--{arg}")
-                
-                # master_port 参数（仅从 _train_cmd_args 配置）
-                if 'master_port' in train_cmd_args:
-                    cmd.extend(["--master_port", str(train_cmd_args['master_port'])])
-                
-                # dump_dataset 参数（仅在节点未提供时使用）
-                if 'dump_dataset' in train_cmd_args and not dump_dataset:
-                    cmd.extend(["--dump_dataset", str(train_cmd_args['dump_dataset'])])
             
             env = os.environ.copy()
             env['PYTHONUNBUFFERED'] = '1'

@@ -5,5 +5,4 @@ max_ar = 2.0
 num_ar_buckets = 3
 [[directory]]
 path = 'E:\comfyuiMQ\ComfyUI_windows_portable\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI_Win\input\test'
-control_paths = ['E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test1', 'E:\\comfyuiMQ\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\Diffusion_pipe_in_ComfyUI_Win\\input\\test2']
 num_repeats = 5

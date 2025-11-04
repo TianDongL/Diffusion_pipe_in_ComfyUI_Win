@@ -56,7 +56,7 @@ class ArBucketsNode:
                 "ar_buckets": ("STRING", {
                     "default": "[[512, 512], [448, 576]]",
                     "multiline": False,
-                    "tooltip": "宽高比分桶配置，可选"
+                    "tooltip": "宽高对分桶配置，可选，不能与宽高比分桶同时使用"
                 }),
             }
         }
@@ -163,6 +163,49 @@ class MultiImageEditDatasetPathNode:
         }
         
         return (dataset_config,)
+
+class MaskDatasetPathNode:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dataset_path": ("STRING", {
+                    "default": "",
+                    "multiline": False,
+                    "tooltip": "训练图像路径 - 包含训练图片的文件夹"
+                }),
+                "mask_path": ("STRING", {
+                    "default": "",
+                    "multiline": False,
+                    "tooltip": "遮罩图像路径 - 白色训练，黑色遮蔽，灰色部分训练。遮罩文件名需与训练图片匹配"
+                }),
+            }
+        }
+    
+    RETURN_TYPES = ("input_path",)
+    RETURN_NAMES = ("input_path",)
+    FUNCTION = "get_mask_dataset_paths"
+    CATEGORY = "Diffusion-Pipe/dataset"
+    
+    def get_mask_dataset_paths(self, dataset_path, mask_path):
+        normalize_windows_path = normalize_windows_path(dataset_path)
+        normalized_mask_path = normalize_windows_path(mask_path)
+        
+        if not os.path.exists(normalize_windows_path):
+            print(f"警告: 数据集路径不存在: {normalize_windows_path}")
+        
+        if not os.path.exists(normalized_mask_path):
+            print(f"警告: 遮罩路径不存在: {normalized_mask_path}")
+        
+        dataset_config = {
+            "path": dataset_path,
+            "mask_path": mask_path
+        }
+        
+        return (dataset_config,)
+
+
+
 
 class FrameBucketsNode:
     @classmethod
