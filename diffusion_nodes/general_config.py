@@ -224,36 +224,26 @@ class GeneralConfig:
             
             if eval_dataset_config:
                 try:
-                    eval_dataset_path = None
+                    # 固定使用 evaldataset.toml 作为评估数据集配置文件
+                    # 评估数据集配置节点会生成/覆盖这个文件
+                    dataset_dir = os.path.join(os.path.dirname(__file__), "..", "dataset")
+                    dataset_dir = os.path.abspath(dataset_dir)
+                    eval_dataset_path = os.path.join(dataset_dir, "evaldataset.toml")
+                    eval_dataset_path = os.path.abspath(eval_dataset_path).replace('\\', '/')
                     
-                    eval_dataset_dir = os.path.join(os.path.dirname(__file__), "..", "evaldataset")
-                    eval_dataset_dir = os.path.abspath(eval_dataset_dir)
-                    
-                    if os.path.exists(eval_dataset_dir):
-                        toml_files = [f for f in os.listdir(eval_dataset_dir) if f.endswith('.toml')]
-                        if toml_files:
-                            latest_file = max(toml_files, key=lambda f: os.path.getmtime(os.path.join(eval_dataset_dir, f)))
-                            eval_dataset_path = os.path.abspath(os.path.join(eval_dataset_dir, latest_file)).replace('\\', '/')
-                    
-                    if not eval_dataset_path:
-                        comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
-                        comfyui_root = os.path.abspath(comfyui_root)
-                        default_eval_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "evaldataset.toml")
-                        eval_dataset_path = os.path.normpath(os.path.abspath(default_eval_dataset_path)).replace('\\', '/')
-                    
-                    if eval_dataset_path:
-                        eval_datasets_list.append({
-                            'name': 'validation_set',
-                            'config': eval_dataset_path
-                        })
-                        logging.info(f"使用评估数据集配置: {eval_dataset_path}")
+                    eval_datasets_list.append({
+                        'name': 'validation_set',
+                        'config': eval_dataset_path
+                    })
+                    logging.info(f"使用评估数据集配置（固定）: {eval_dataset_path}")
                         
                 except Exception as e:
                     logging.warning(f"处理评估数据集配置时出错: {str(e)}")
-                    comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
-                    comfyui_root = os.path.abspath(comfyui_root)
-                    fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "evaldataset.toml")
-                    fallback_eval_path = os.path.normpath(os.path.abspath(fallback_path)).replace('\\', '/')
+                    # fallback 也使用固定路径
+                    dataset_dir = os.path.join(os.path.dirname(__file__), "..", "dataset")
+                    dataset_dir = os.path.abspath(dataset_dir)
+                    fallback_eval_path = os.path.join(dataset_dir, "evaldataset.toml")
+                    fallback_eval_path = os.path.abspath(fallback_eval_path).replace('\\', '/')
                     eval_datasets_list.append({
                         'name': 'validation_set',
                         'config': fallback_eval_path
@@ -311,32 +301,23 @@ class GeneralConfig:
             
             if dataset_config:
                 try:
-                    dataset_path = None
-                    
+                    # 固定使用 dataset.toml 作为主数据集配置文件
+                    # 数据集配置节点会生成/覆盖这个文件
                     dataset_dir = os.path.join(os.path.dirname(__file__), "..", "dataset")
-                    dataset_dir = os.path.abspath(dataset_dir)  # 标准化为绝对路径
-                    
-                    if os.path.exists(dataset_dir):
-                        toml_files = [f for f in os.listdir(dataset_dir) if f.endswith('.toml')]
-                        if toml_files:
-                            latest_file = max(toml_files, key=lambda f: os.path.getmtime(os.path.join(dataset_dir, f)))
-                            dataset_path = os.path.abspath(os.path.join(dataset_dir, latest_file)).replace('\\', '/')
-                    
-                    if not dataset_path:
-                        comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
-                        comfyui_root = os.path.abspath(comfyui_root)
-                        default_dataset_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
-                        dataset_path = os.path.normpath(os.path.abspath(default_dataset_path)).replace('\\', '/')
+                    dataset_dir = os.path.abspath(dataset_dir)
+                    dataset_path = os.path.join(dataset_dir, "dataset.toml")
+                    dataset_path = os.path.abspath(dataset_path).replace('\\', '/')
                     
                     settings["dataset"] = dataset_path
-                    logging.info(f"数据集配置路径: {dataset_path}")
+                    logging.info(f"数据集配置路径（固定）: {dataset_path}")
                     
                 except Exception as e:
                     logging.warning(f"处理数据集配置时出错: {str(e)}")
-                    comfyui_root = os.path.join(os.path.dirname(__file__), "..", "..", "..")
-                    comfyui_root = os.path.abspath(comfyui_root)
-                    fallback_path = os.path.join(comfyui_root, "custom_nodes", "Diffusion_pipe_in_ComfyUI_Win", "dataset", "dataset.toml")
-                    settings["dataset"] = os.path.normpath(os.path.abspath(fallback_path)).replace('\\', '/')
+                    # fallback 也使用固定路径
+                    dataset_dir = os.path.join(os.path.dirname(__file__), "..", "dataset")
+                    dataset_dir = os.path.abspath(dataset_dir)
+                    fallback_path = os.path.join(dataset_dir, "dataset.toml")
+                    settings["dataset"] = os.path.abspath(fallback_path).replace('\\', '/')
             else:
                 logging.error("未提供数据集配置，这是必需的参数")
                 raise ValueError("dataset_config是必需参数，必须连接数据集配置节点")
