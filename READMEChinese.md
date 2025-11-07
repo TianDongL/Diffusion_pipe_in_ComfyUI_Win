@@ -214,10 +214,9 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 |Flux Kontext    |✅    |✅              |✅                |
 |Wan2.2          |✅    |✅              |✅                |
 |Qwen-Image      |✅    |✅              |✅                |
-|Qwen-Image-Edit |✅    |✅              |✅                |
+|Qwen-Image-Edit-2509 |✅    |✅              |✅                |
 |HunyuanImage-2.1|✅    |✅              |✅                |
 |AuraFlow        |✅    |❌              |✅                |
-
 
 ## 许可证
 
@@ -240,5 +239,4 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 - Hugging Face Diffusers
 - DeepSpeed 团队
 - 各模型原始作者
-
 

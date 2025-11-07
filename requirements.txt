@@ -28,3 +28,4 @@ pytorch-optimizer
 wandb
 optimum-quanto
 psutil
+mpi4py

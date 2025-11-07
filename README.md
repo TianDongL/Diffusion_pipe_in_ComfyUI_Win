@@ -4,7 +4,7 @@
 
 
 <div align="center">
-  
+
   [![Portable Environment](https://img.shields.io/badge/Portable%20Environment-Visit%20Repo-blue?style=rounded-pill&logo=huggingface)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
 
   [![Linux Version](https://img.shields.io/badge/Linux%20Version-Visit%20Repo-green?style=rounded-pill&logo=github)](https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI.git)
@@ -211,7 +211,7 @@ This plugin supports over 20 of the latest Diffusion models, including:
 |Flux Kontext    |✅    |✅              |✅                |
 |Wan2.2          |✅    |✅              |✅                |
 |Qwen-Image      |✅    |✅              |✅                |
-|Qwen-Image-Edit |✅    |✅              |✅                |
+|Qwen-Image-Edit-2509 |✅    |✅              |✅                |
 |HunyuanImage-2.1|✅    |✅              |✅                |
 |AuraFlow        |✅    |❌              |✅                |
 
