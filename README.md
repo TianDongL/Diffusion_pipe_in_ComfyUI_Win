@@ -90,7 +90,7 @@ pip install E:/ComfyUI/flash_attn-2.8.1-cp311-cp311-win_amd64.whl
 pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-wheels/windows/index.html
 ```
 ```bash
-cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win
 ```
 ```bash
 pip install -r requirements.txt

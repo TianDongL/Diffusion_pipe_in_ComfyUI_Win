@@ -90,7 +90,7 @@ pip install bitsandbytes --prefer-binary --extra-index-url=https://jllllll.githu
 ```
 
 ```bash
-cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win.git
+cd /ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win
 ```
 
 ```bash
