@@ -23,7 +23,7 @@
 
 Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provides complete Diffusion model training and fine-tuning capabilities for ComfyUI. This project allows users to configure and launch training for various advanced AI models within ComfyUI's graphical interface, supporting both LoRA and full fine-tuning, covering the most popular image generation and video generation models available today.You can train Qwen lora with 16g Vram
 
-***Video Demo: https://www.bilibili.com/video/BV1DAnKzTEup/?share_source=copy_web&vd_source=5a2c3d8b60d05e98a2e7f4f58f77eba5***
+***Video Demo: https://www.bilibili.com/video/BV1CRk9BYErw/?vd_source=7fd137e57a445e84bd9ffea9b632c98d***
 
 ***[📋 View Supported Models](./docs/supported_models.md)***
 
