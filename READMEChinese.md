@@ -2,7 +2,9 @@
 
  # Diffusion pip in ComfyUI Win 自定义节点
 
- # 注意！此处为windows版本❗❗❗❗
+# Attention! This is the Windows version ❗❗❗❗
+# 注意！此处为windows版本❗❗❗❗
+
 <div align="center">
 
   [![便携环境](https://img.shields.io/badge/便携环境-Visit%20Repo-blue?style=rounded-pill&logo=huggingface)](https://huggingface.co/TianDongL/DiffusionPipeInComfyUI_Win)
