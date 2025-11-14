@@ -2,6 +2,8 @@
 
 # Diffusion pipe in ComfyUI For Windows Custom Node
 
+# Attention! This is the Windows version ❗❗❗❗
+
 
 <div align="center">
 
