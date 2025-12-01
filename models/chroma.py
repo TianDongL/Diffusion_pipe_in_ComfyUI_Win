@@ -2,7 +2,7 @@ import math
 from dataclasses import dataclass
 import sys
 import os.path
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/flow'))
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/flow'))
 
 import diffusers
 import torch

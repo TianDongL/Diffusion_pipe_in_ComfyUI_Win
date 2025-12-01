@@ -1,7 +1,7 @@
 import math
 import sys
 import os.path
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/OmniGen2'))
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/OmniGen2'))
 
 import torch
 from torch import nn

@@ -17,7 +17,7 @@ try:
         FluxKontextModelNode, QwenImageModelNode, CosmosPredict2ModelNode, OmniGen2ModelNode,
         FluxModelNode, SD3ModelNode, LTXVideoModelNode, HunyuanVideoModelNode,
         HiDreamModelNode, ChromaModelNode, CosmosModelNode, Lumina2ModelNode,
-        Wan21ModelNode, AuraFlowModelNode
+        Wan21ModelNode, AuraFlowModelNode, Flux2ConfigNode, ZImageModelNode   
     ) 
     from .diffusion_nodes.model_tools import AdapterConfigNode, OptimizerConfigNode
     from .diffusion_nodes.start import Train
@@ -46,7 +46,7 @@ except ImportError:
         FluxKontextModelNode, QwenImageModelNode, CosmosPredict2ModelNode, OmniGen2ModelNode,
         FluxModelNode, SD3ModelNode, LTXVideoModelNode, HunyuanVideoModelNode,
         HiDreamModelNode, ChromaModelNode, CosmosModelNode, Lumina2ModelNode,
-        Wan21ModelNode, AuraFlowModelNode
+        Wan21ModelNode, AuraFlowModelNode, Flux2ConfigNode, ZImageModelNode     
     ) 
     from diffusion_nodes.model_tools import AdapterConfigNode, OptimizerConfigNode
     from diffusion_nodes.start import Train
@@ -85,6 +85,8 @@ NODE_CLASS_MAPPINGS = {
     "HiDreamModelNode": HiDreamModelNode,
     "HunyuanImage21ModelNode": HunyuanImage21ModelNode,
     "AuraFlowModelNode": AuraFlowModelNode,
+    "Flux2ConfigNode": Flux2ConfigNode, 
+    "ZImageModelNode": ZImageModelNode,
     # 配置生成节点
     "GeneralConfig": GeneralConfig,
     "AdvancedTrainConfig": AdvancedTrainConfig,
@@ -132,6 +134,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "ChromaModelNode": "Chroma模型配置器",
     "HunyuanImage21ModelNode": "HunyuanImage21模型配置器",
     "AuraFlowModelNode": "AuraFlow模型配置器",
+    "Flux2ConfigNode": "Flux2模型配置器",   
+    "ZImageModelNode": "ZImage模型配置器",
     # 配置生成节点
     "GeneralConfig": "通用训练设置",
     "AdvancedTrainConfig": "高级训练配置",

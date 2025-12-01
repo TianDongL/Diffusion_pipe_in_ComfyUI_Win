@@ -2,9 +2,15 @@ import argparse
 import os
 import sys
 
+#for windows===========================================================================
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
+#for windows===========================================================================
     sys.path.insert(0, current_dir)
+
+# Force unload 'utils' if it was already loaded from ComfyUI (e.g. by launcher)
+if 'utils' in sys.modules:
+    del sys.modules['utils']
 
 import wandb
 from datetime import datetime, timezone
@@ -12,6 +18,7 @@ import shutil
 import glob
 import time
 import random
+import tempfile
 import json
 import inspect
 from pathlib import Path
@@ -196,11 +203,8 @@ def _evaluate(model_engine, eval_dataloaders, tb_writer, step, eval_gradient_acc
     for eval_dataloader in eval_dataloaders.values():
         pbar_total += len(eval_dataloader) * len(TIMESTEP_QUANTILES_FOR_EVAL) // eval_gradient_accumulation_steps
     if is_main_process():
-        print('Running eval', flush=True)
-        import sys
-        pbar = tqdm(total=pbar_total, file=sys.stderr, 
-                   ascii=True, ncols=100, 
-                   bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]')
+        print('Running eval')
+        pbar = tqdm(total=pbar_total)
     else:
         pbar = None
 
@@ -245,12 +249,16 @@ def evaluate(model, model_engine, eval_dataloaders, tb_writer, step, eval_gradie
 
 def distributed_init(args):
     """Initialize distributed training environment."""
-    world_size = int(os.getenv('WORLD_SIZE', '1'))
-    rank = int(os.getenv('RANK', '0'))
-    local_rank = args.local_rank
-
-    # Set environment variables for distributed training
-    os.environ['MASTER_ADDR'] = os.getenv('MASTER_ADDR', 'localhost')
+    # Force single process mode on Windows
+    world_size = 1
+    rank = 0
+    local_rank = 0
+    
+    # Force environment variables for single GPU
+    os.environ['WORLD_SIZE'] = '1'
+    os.environ['RANK'] = '0'
+    os.environ['LOCAL_RANK'] = '0'
+    os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = str(args.master_port)
 
     return world_size, rank, local_rank
@@ -277,6 +285,7 @@ def _get_automagic_lrs(optimizer):
 if __name__ == '__main__':
     apply_patches()
 
+#for windows===========================================================================
     with open(args.config, encoding='utf-8') as f:
         # Inline TOML tables are not pickleable, which messes up the multiprocessing dataset stuff. This is a workaround.
         config = json.loads(json.dumps(toml.load(f)))
@@ -285,15 +294,22 @@ if __name__ == '__main__':
     common.AUTOCAST_DTYPE = config['model']['dtype']
     dataset_util.UNCOND_FRACTION = config.get('uncond_fraction', 0.0)
     if map_num_proc := config.get('map_num_proc', None):
-        dataset_util.NUM_PROC = map_num_proc
+#for windows===========================================================================
+        dataset_util.NUM_PROC = 1 # Force 1 process on Windows
+        print(f"Forcing NUM_PROC=1 on Windows (ignoring config value {map_num_proc})")
 
     # Initialize distributed environment before deepspeed
     world_size, rank, local_rank = distributed_init(args)
 
     # Now initialize deepspeed
-    deepspeed.init_distributed()
-
-    # needed for broadcasting Queue in dataset.py
+    #for windows===========================================================================
+    # Now initialize deepspeed
+    # Use file-based initialization to avoid Windows hostname encoding issues
+    init_file = os.path.join(tempfile.gettempdir(), f'deepspeed_init_{os.getpid()}')
+    if os.path.exists(init_file):
+        os.remove(init_file)
+    init_method = f'file://{init_file}'
+    deepspeed.init_distributed(dist_backend='gloo', init_method=init_method, rank=rank, world_size=world_size)
     torch.cuda.set_device(dist.get_rank())
 
     resume_from_checkpoint = (
@@ -352,6 +368,9 @@ if __name__ == '__main__':
     elif model_type == 'auraflow':
         from models import auraflow
         model = auraflow.AuraFlowPipeline(config)
+    elif model_type == 'z_image':
+        from models import z_image
+        model = z_image.ZImagePipeline(config)
     else:
         raise NotImplementedError(f'Model type {model_type} is not implemented')
 
@@ -364,11 +383,39 @@ if __name__ == '__main__':
     #     pil_image.save('test.jpg')
     # quit()
 
+#for windows===========================================================================
     with open(config['dataset'], encoding='utf-8') as f:
         dataset_config = toml.load(f)
+
+    micro_batch_size_per_gpu = config.get('micro_batch_size_per_gpu', 1)
+    if isinstance(micro_batch_size_per_gpu, int):
+        micro_batch_size_per_gpu = {None: micro_batch_size_per_gpu}
+    elif isinstance(micro_batch_size_per_gpu, list):
+        micro_batch_size_per_gpu = {x[0]: x[1] for x in micro_batch_size_per_gpu}
+
+    eval_micro_batch_size_per_gpu = config.get('eval_micro_batch_size_per_gpu', micro_batch_size_per_gpu)
+    if isinstance(eval_micro_batch_size_per_gpu, int):
+        eval_micro_batch_size_per_gpu = {None: eval_micro_batch_size_per_gpu}
+    elif isinstance(eval_micro_batch_size_per_gpu, list):
+        eval_micro_batch_size_per_gpu = {x[0]: x[1] for x in eval_micro_batch_size_per_gpu}
+
+    image_micro_batch_size_per_gpu = config.get('image_micro_batch_size_per_gpu', micro_batch_size_per_gpu)
+    if isinstance(image_micro_batch_size_per_gpu, int):
+        image_micro_batch_size_per_gpu = {None: image_micro_batch_size_per_gpu}
+    elif isinstance(image_micro_batch_size_per_gpu, list):
+        image_micro_batch_size_per_gpu = {x[0]: x[1] for x in image_micro_batch_size_per_gpu}
+
+    eval_image_micro_batch_size_per_gpu = config.get('eval_image_micro_batch_size_per_gpu', eval_micro_batch_size_per_gpu)
+    if isinstance(eval_image_micro_batch_size_per_gpu, int):
+        eval_image_micro_batch_size_per_gpu = {None: eval_image_micro_batch_size_per_gpu}
+    elif isinstance(eval_image_micro_batch_size_per_gpu, list):
+        eval_image_micro_batch_size_per_gpu = {x[0]: x[1] for x in eval_image_micro_batch_size_per_gpu}
+
+    default_micro_batch_size_per_gpu = list(micro_batch_size_per_gpu.values())[0]
+
     gradient_release = config['optimizer'].get('gradient_release', False)
     ds_config = {
-        'train_micro_batch_size_per_gpu': config.get('micro_batch_size_per_gpu', 1),
+        'train_micro_batch_size_per_gpu': default_micro_batch_size_per_gpu,
         'gradient_accumulation_steps': config.get('gradient_accumulation_steps', 1),
         # Can't do gradient clipping with gradient release, since there are no grads at the end of the step anymore.
         'gradient_clipping': 0. if gradient_release else config.get('gradient_clipping', 1.0),
@@ -388,6 +435,7 @@ if __name__ == '__main__':
         else:
             name = eval_dataset['name']
             config_path = eval_dataset['config']
+#for windows===========================================================================
         with open(config_path, encoding='utf-8') as f:
             eval_dataset_config = toml.load(f)
         eval_data_map[name] = dataset_util.Dataset(eval_dataset_config, model, skip_dataset_validation=args.i_know_what_i_am_doing)
@@ -721,17 +769,17 @@ if __name__ == '__main__':
     train_data.post_init(
         model_engine.grid.get_data_parallel_rank(),
         model_engine.grid.get_data_parallel_world_size(),
-        model_engine.train_micro_batch_size_per_gpu(),
+        micro_batch_size_per_gpu,
         model_engine.gradient_accumulation_steps(),
-        config.get('image_micro_batch_size_per_gpu', model_engine.train_micro_batch_size_per_gpu()),
+        image_micro_batch_size_per_gpu,
     )
     for eval_data in eval_data_map.values():
         eval_data.post_init(
             model_engine.grid.get_data_parallel_rank(),
             model_engine.grid.get_data_parallel_world_size(),
-            config.get('eval_micro_batch_size_per_gpu', model_engine.train_micro_batch_size_per_gpu()),
+            eval_micro_batch_size_per_gpu,
             config['eval_gradient_accumulation_steps'],
-            config.get('image_eval_micro_batch_size_per_gpu', config.get('eval_micro_batch_size_per_gpu', model_engine.train_micro_batch_size_per_gpu())),
+            eval_image_micro_batch_size_per_gpu,
         )
 
     # Might be useful because we set things in fp16 / bf16 without explicitly enabling Deepspeed fp16 mode.
@@ -739,8 +787,8 @@ if __name__ == '__main__':
     communication_data_type = config['lora']['dtype'] if 'lora' in config else config['model']['dtype']
     model_engine.communication_data_type = communication_data_type
 
-    # Windows兼容性：使用单进程数据加载
-    num_workers = config.get('dataloader_num_workers', 0)
+#for windows===========================================================================
+    num_workers = 0 # Force 0 workers on Windows to avoid multiprocessing issues
     train_dataloader = dataset_util.PipelineDataLoader(train_data, model_engine, model_engine.gradient_accumulation_steps(), model, num_dataloader_workers=num_workers)
     steps_per_epoch = len(train_dataloader) // model_engine.gradient_accumulation_steps()
 
@@ -762,7 +810,7 @@ if __name__ == '__main__':
     # make sure to do this before calling model_engine.set_dataloader(), as that method creates an iterator
     # which starts creating dataloader internal state
     if resume_from_checkpoint:
-        param_groups = optimizer.param_groups.copy()        
+        param_groups = optimizer.param_groups.copy()
         load_path, client_state = model_engine.load_checkpoint(
             run_dir,
             load_module_strict=False,

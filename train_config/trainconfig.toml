@@ -1,10 +1,10 @@
 eval_datasets = []
 epochs = 100
-micro_batch_size_per_gpu = 1
+micro_batch_size_per_gpu = 2
 gradient_accumulation_steps = 4
 pipeline_stages = 1
 warmup_steps = 100
-blocks_to_swap = 40
+blocks_to_swap = 0
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
@@ -12,11 +12,11 @@ partition_method = 'parameters'
 output_dir = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/output/123'
 disable_block_swap_for_eval = false
 gradient_clipping = 1.0
-video_clip_mode = 'single_beginning'
-save_every_n_epochs = 24
+save_every_n_epochs = 1
 checkpoint_every_n_minutes = 120
 dataset = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win/dataset/dataset.toml'
 lr_scheduler = 'linear'
+map_num_proc = 1
 
 [optimizer]
 type = 'AdamW8bitKahan'
@@ -25,12 +25,16 @@ betas = [ 0.9, 0.99,]
 weight_decay = 0.01
 
 [model]
-type = 'qwen_image'
-diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/Qwen-Image-Edit-2509'
-transformer_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/qwenimage/qwen_image_bf16.safetensors'
+type = 'z_image'
+merge_adapters = [ 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/loras/zimage_turbo_training_adapter_v1.safetensors',]
+diffusion_model = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/diffusion_models/z_image_turbo_bf16.safetensors'
+vae = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/vae/z_vae.safetensors'
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
 transformer_dtype = 'bfloat16'
+[[model.text_encoders]]
+path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/clip/qwen_3_4b.safetensors'
+type = 'lumina2'
 
 [adapter]
 type = 'lora'

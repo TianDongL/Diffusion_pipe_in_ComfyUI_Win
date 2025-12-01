@@ -1,7 +1,7 @@
 from pathlib import Path
 import os.path
 import sys
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/LTX_Video'))
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules/LTX_Video'))
 
 import random
 import safetensors

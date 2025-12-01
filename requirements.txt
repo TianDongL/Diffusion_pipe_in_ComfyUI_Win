@@ -29,3 +29,5 @@ wandb
 optimum-quanto
 psutil
 mpi4py
+wheel
+ninja

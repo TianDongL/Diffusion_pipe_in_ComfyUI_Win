@@ -3,7 +3,6 @@ enable_ar_bucket = true
 min_ar = 0.5
 max_ar = 2.0
 num_ar_buckets = 3
-frame_buckets = [1, 33, 65, 97]
 [[directory]]
-path = 'E:\comfyuiMQ\ComfyUI_windows_portable\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI_Win\input\test'
+path = 'E:\comfyuiMQ\ComfyUI_windows_portable\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI_Win\input\eval'
 num_repeats = 5

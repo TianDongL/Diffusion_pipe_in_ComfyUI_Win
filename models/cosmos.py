@@ -1,7 +1,7 @@
 import sys
 from pprint import pprint
 import os.path
-sys.path.insert(0, os.path.abspath('submodules/Cosmos'))
+sys.path.append(os.path.abspath('submodules/Cosmos'))
 
 import torch
 from torch import nn

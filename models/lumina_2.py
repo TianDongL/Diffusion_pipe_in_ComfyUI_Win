@@ -3,7 +3,7 @@ from typing import List, Tuple
 import sys
 import os.path
 import re
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules'))
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../submodules'))
 
 import diffusers
 import transformers
