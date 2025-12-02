@@ -1,8 +1,8 @@
-resolutions = [512]
+resolutions = [[512, 512], [1024, 720]]
 enable_ar_bucket = true
 min_ar = 0.5
 max_ar = 2.0
 num_ar_buckets = 3
 [[directory]]
 path = 'E:\comfyuiMQ\ComfyUI_windows_portable\ComfyUI\custom_nodes\Diffusion_pipe_in_ComfyUI_Win\input\eval'
-num_repeats = 5
+num_repeats = 1
