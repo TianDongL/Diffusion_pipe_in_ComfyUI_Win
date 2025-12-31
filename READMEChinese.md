@@ -28,6 +28,9 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 
 ## 更新日志 
+
+* 20251231,zimage fp8 comfy格式训练，hunyuan_video_15模型支持。
+
 * 20251130:Z图像支持、支持diffusers格式和Comfyui格式的模型
 
 你需要下载最新的diffusers开发版来支持训练,如
@@ -242,6 +245,7 @@ E:/ComfyUI_windows_portable/python_embeded/python.exe -m pip install -r requirem
 |HunyuanImage-2.1|✅    |✅              |✅                |
 |AuraFlow        |✅    |❌              |✅                |
 |Z-Image         |✅    |✅              |❌                |
+|HunyuanVideo-1.5|✅    |✅              |✅                |
 
 ## 许可证
 
