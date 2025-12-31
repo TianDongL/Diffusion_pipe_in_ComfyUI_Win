@@ -12,11 +12,15 @@ class ModelConfig:
                 "model_path": ("model_path", {
                     "tooltip": "模型路径，根据不同的模型，选择不同的模型路径，具体查看注释"
                 }),
+                "model_type": (["diffusion", "transformers"], {
+                    "default": "diffusion",
+                    "tooltip": "选择模型格式类型 (diffusion / transformers)"
+                }),
                 "dtype": (["bfloat16", "float16", "float32"], {
                     "default": "bfloat16",
                     "tooltip": "基础数据类型"
                 }),
-                "transformer_dtype": (["auto", "bfloat16", "float8","float8_e5m2"], {
+                "diffusion_transformer_dtype": (["auto", "bfloat16", "float8","float8_e5m2"], {
                     "default": "bfloat16",
                     "tooltip": "Transformer特定数据类型（支持float8用于LoRA训练）"
                 }),
@@ -32,39 +36,33 @@ class ModelConfig:
     FUNCTION = "generate_model_config"
     CATEGORY = "Diffusion-Pipe/Config"
 
-    def generate_model_config(self, model_path, dtype: str, transformer_dtype: str, timestep_sample_method: str) -> Tuple[dict]:
-        """生成模型配置"""
+    def generate_model_config(self, model_path, dtype: str, diffusion_transformer_dtype: str, timestep_sample_method: str, model_type: str) -> Tuple[dict]:
         try:
-            # 构建完整的模型配置字典
             model_config = {
                 "dtype": dtype,
                 "timestep_sample_method": timestep_sample_method,
             }
             
-            # 处理不同类型的model_path输入
             if isinstance(model_path, dict):
-                # 检查是否有错误
                 if "error" in model_path:
                     logging.error(f"模型路径配置错误: {model_path['error']}")
                     return ({"error": model_path["error"]},)
                 
-                # 如果是字典（来自模型节点），则直接合并所有配置（包括type）
-                # 先合并model_path，再用当前配置覆盖
                 final_config = model_path.copy()
                 final_config.update(model_config)
                 model_config = final_config
                 
-                # 获取模型类型信息用于显示
-                model_type = model_path.get("type", "未知")
-                path_info = f"模型类型: {model_type}, 配置项: {len(model_path)}"
+                path_model_type = model_path.get("type", "未知")
+                path_info = f"模型类型: {path_model_type}, 配置项: {len(model_path)}"
             else:
-                # 如果是字符串（来自CheckpointPathNode或DiffusersPathNode），则设置为checkpoint_path
                 model_config["checkpoint_path"] = model_path
                 path_info = f"模型路径: {model_path}"
             
-            # 添加transformer_dtype（仅当非auto时）
-            if transformer_dtype != "auto":
-                model_config["transformer_dtype"] = transformer_dtype
+            if diffusion_transformer_dtype != "auto":
+                if model_type == "diffusion":
+                    model_config["diffusion_model_dtype"] = diffusion_transformer_dtype
+                else:
+                    model_config["transformer_dtype"] = diffusion_transformer_dtype
             
             logging.info(f"成功生成模型配置，{path_info}")
             

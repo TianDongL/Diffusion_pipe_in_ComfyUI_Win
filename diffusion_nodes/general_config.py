@@ -160,6 +160,9 @@ class GeneralConfig:
                     "default": "none",
                     "tooltip": "仅适用于视频模型训练。视频帧提取模式 - none:不使用视频模式, single_beginning:从视频开头提取一个片段, single_middle:从视频中间提取一个片段, multiple_overlapping:提取多个可能重叠的片段覆盖整个视频"
                 }),
+                "sampler_config": ("SAMPLER_CONFIG", {
+                    "tooltip": "训练采样器配置（可选，来自TrainingSamplerConfig节点）"
+                }),
             }
         }
     
@@ -176,7 +179,7 @@ class GeneralConfig:
                          eval_gradient_accumulation_steps: int = 1, save_every_n_epochs: int = 1,
                          checkpoint_every_n_minutes: int = 120, caching_batch_size: int = 1,
                          disable_block_swap_for_eval: bool = False, video_clip_mode: str = "none",
-                         adapter_config=None, advanced_config=None, eval_dataset_config=None) -> Tuple[str, str, str]:
+                         adapter_config=None, advanced_config=None, eval_dataset_config=None, sampler_config=None) -> Tuple[str, str, str]:
         """生成通用训练设置"""
         try:
             plugin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
