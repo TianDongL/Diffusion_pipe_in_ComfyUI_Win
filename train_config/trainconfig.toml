@@ -4,7 +4,7 @@ micro_batch_size_per_gpu = 2
 gradient_accumulation_steps = 4
 pipeline_stages = 1
 warmup_steps = 100
-blocks_to_swap = 0
+blocks_to_swap = 20
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
@@ -25,14 +25,13 @@ betas = [ 0.9, 0.99,]
 weight_decay = 0.01
 
 [model]
-type = 'z_image'
-merge_adapters = [ 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/loras/zimage_turbo_training_adapter_v1.safetensors',]
-checkpoint_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/unet/Z-Image-Turbo'
+type = 'qwen2511'
+diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win/Qwen-Image-Edit-2511'
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
-diffusers_model_dtype = 'bfloat16'
+transformer_dtype = 'bfloat16'
 
 [adapter]
 type = 'lora'
-rank = 16
+rank = 32
 dtype = 'bfloat16'

@@ -4,9 +4,10 @@ import sys
 
 #for windows===========================================================================
 current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
+if current_dir in sys.path:
+    sys.path.remove(current_dir)
+sys.path.insert(0, current_dir)
 #for windows===========================================================================
-    sys.path.insert(0, current_dir)
 
 # Force unload 'utils' if it was already loaded from ComfyUI (e.g. by launcher)
 if 'utils' in sys.modules:
@@ -121,7 +122,8 @@ def set_config_defaults(config):
     if transformer_dtype := model_config.get('transformer_dtype', None):
         model_config['transformer_dtype'] = DTYPE_MAP[transformer_dtype]
     if diffusion_model_dtype := model_config.get('diffusion_model_dtype', None):
-        model_config['diffusion_model_dtype'] = DTYPE_MAP[diffusion_model_dtype]    model_config.setdefault('guidance', 1.0)
+        model_config['diffusion_model_dtype'] = DTYPE_MAP[diffusion_model_dtype]
+    model_config.setdefault('guidance', 1.0)
 
     if 'adapter' in config:
         adapter_config = config['adapter']
@@ -375,6 +377,9 @@ if __name__ == '__main__':
     elif model_type == 'hunyuan_video_15':
         from models import hunyuan_video_15
         model = hunyuan_video_15.HunyuanVideo15Pipeline(config)    
+    elif model_type == 'qwen2511':
+        from models import qwen2511
+        model = qwen2511.Qwen2511Pipeline(config)
     else:
         raise NotImplementedError(f'Model type {model_type} is not implemented')
 
