@@ -28,9 +28,10 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 ***Video Demo: https://www.bilibili.com/video/BV1CRk9BYErw/?vd_source=7fd137e57a445e84bd9ffea9b632c98d***
 
-***[📋 View Supported Models](./docs/supported_models.md)***
 
 ## update
+
+* 20260102: qwen2511 support, supports both Diffusers and ComfyUI format models
 
 * 20251231, Zimage FP8 Comfy format training, supported by hunyuan-video_15 model.
 
@@ -62,6 +63,9 @@ Z-Image LoRAs are saved in ComfyUI format. This is different from Diffusers form
 * 20251103:support MultiImage Edit (qwen2509)
 
 * 20251105:support mask trainning,Fix off-by-one error in plots when using examples as x-axis,Allow using captions.json without tar files,add reset_optimizer flag,--reset_optimizer_params flag（Reset optimizer parameters, which allows resetting the optimizer during resuming training）,Fix datasets issue,Cast to float16 in dataset caching to cut size on disk in half
+
+# Please read the notice in the workflow before training
+![notice](./img/notice.png)
 
 # Quick Start
 ## You can use my pre configured portable environment pack
@@ -242,6 +246,7 @@ This plugin supports over 20 of the latest Diffusion models, including:
 |AuraFlow        |✅    |❌              |✅                |
 |Z-Image         |✅    |✅              |❌                |
 |HunyuanVideo-1.5|✅    |✅              |✅                |
+|Qwen-Image-Edit-2511 |✅    |✅              |✅                |
 
 
 ## License
