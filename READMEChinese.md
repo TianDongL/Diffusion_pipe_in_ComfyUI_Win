@@ -27,6 +27,7 @@ Diffusion-Pipe In ComfyUI 自定义节点是一个强大的扩展插件，为 Co
 
 
 ## 更新日志 
+* 20260103: qwen2512支持，与qwen_image一样
 
 * 20260102:qwen2511支持，支持diffusers格式和Comfyui格式的模型
 
