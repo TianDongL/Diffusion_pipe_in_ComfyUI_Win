@@ -105,10 +105,10 @@ conda activate comfyui_DP
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
 
-* You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
+* You need to install pre-compiled wheels for Windows. You can find the compiled wheels in my Releases. This project requires deepspeed==0.18.4 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases
 
 ```bash
-pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+pip install E:/ComfyUI/deepspeed-0.18.4+b35d9eb0-cp311-cp311-win_amd64.whl
 ```
 
 * And flash-attn==2.8.1

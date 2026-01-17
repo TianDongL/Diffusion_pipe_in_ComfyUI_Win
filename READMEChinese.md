@@ -105,10 +105,10 @@ conda activate comfyui_DP
 pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
 ```
 
-*你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.17.0 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases*
+*你需要安装为win预编译的轮子，你可以在我的Releases中找到为其编译的轮子，此项目需要deepspeed==0.18.4 https://github.com/TianDongL/Diffusion_pipe_in_ComfyUI_Win/releases*
 
 ```bash
-pip install E:/ComfyUI/deepspeed-0.17.0+720787e7-cp311-cp311-win_amd64.whl
+pip install E:/ComfyUI/deepspeed-0.18.4+b35d9eb0-cp311-cp311-win_amd64.whl
 ```
 
 *和flash-attn==2.8.1*
