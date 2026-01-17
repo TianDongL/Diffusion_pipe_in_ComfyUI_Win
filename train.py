@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+sys.modules["comfy_kitchen"] = None
 
 #for windows===========================================================================
 current_dir = os.path.dirname(os.path.abspath(__file__))

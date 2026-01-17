@@ -4,7 +4,7 @@ micro_batch_size_per_gpu = 1
 gradient_accumulation_steps = 4
 pipeline_stages = 1
 warmup_steps = 0
-blocks_to_swap = 40
+blocks_to_swap = 0
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
@@ -25,11 +25,16 @@ betas = [ 0.9, 0.99,]
 weight_decay = 0.01
 
 [model]
-type = 'qwen_image'
-diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/unet/Qwen-Image-2512'
+type = 'flux2'
+diffusion_model = 'C:/Users/LUYUE/Desktop/Flux2Klein/main/flux-2-klein-9b.safetensors'
+vae = 'C:/Users/LUYUE/Desktop/Flux2Klein/VAE/flux2-vae.safetensors'
+shift = 3
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
-transformer_dtype = 'float8'
+diffusion_model_dtype = 'float8'
+[[model.text_encoders]]
+path = 'C:/Users/LUYUE/Desktop/Flux2Klein/textencoder/qwen_3_8b.safetensors'
+type = 'flux2'
 
 [adapter]
 type = 'lora'
