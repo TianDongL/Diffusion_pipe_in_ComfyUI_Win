@@ -1,10 +1,10 @@
 eval_datasets = []
-epochs = 100
-micro_batch_size_per_gpu = 2
+epochs = 500
+micro_batch_size_per_gpu = 1
 gradient_accumulation_steps = 4
 pipeline_stages = 1
-warmup_steps = 100
-blocks_to_swap = 20
+warmup_steps = 0
+blocks_to_swap = 40
 activation_checkpointing = true
 save_dtype = 'bfloat16'
 caching_batch_size = 1
@@ -25,13 +25,13 @@ betas = [ 0.9, 0.99,]
 weight_decay = 0.01
 
 [model]
-type = 'qwen2511'
-diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/custom_nodes/Diffusion_pipe_in_ComfyUI_Win/Qwen-Image-Edit-2511'
+type = 'qwen_image'
+diffusers_path = 'E:/comfyuiMQ/ComfyUI_windows_portable/ComfyUI/models/unet/Qwen-Image-2512'
 dtype = 'bfloat16'
 timestep_sample_method = 'logit_normal'
-transformer_dtype = 'bfloat16'
+transformer_dtype = 'float8'
 
 [adapter]
 type = 'lora'
-rank = 32
+rank = 16
 dtype = 'bfloat16'

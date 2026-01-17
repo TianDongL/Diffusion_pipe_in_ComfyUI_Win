@@ -1032,33 +1032,67 @@ class HunyuanImage21ModelNode:
             return ({"error": str(e)},)
 
 class Flux2ConfigNode:
+    
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "diffusers_path": ("STRING", {
+                "diffusion_model": ("STRING", {
                     "default": "",
-                    "tooltip": "Diffusers模型文件的完整路径"
+                    "tooltip": "Flux2模型文件的完整路径（如：flux2/flux2.safetensors）"
                 }),
-            },
+                "vae": ("STRING", {
+                    "default": "",
+                    "tooltip": "VAE模型文件的完整路径（如：vae/vae.safetensors）"
+                }),
+                "text_encoder": ("STRING", {
+                    "default": "",
+                    "tooltip": "Text Encoder模型文件的完整路径（如：text_encoder/text_encoder.safetensors）"
+                }),
+                "shift": ("INT", {
+                    "default": 3,
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "tooltip": "shift参数"
+                }),
+            }
         }
-    
+        
     RETURN_TYPES = ("model_path",)
     RETURN_NAMES = ("model_path",)
-    FUNCTION = "get_diffusers_config"
-    CATEGORY = "Diffusion-Pipe/Model"   
-    
-    def get_diffusers_config(self, diffusers_path: str) -> Tuple[dict]:
+    FUNCTION = "get_flux2_config"
+    CATEGORY = "Diffusion-Pipe/Model"
+
+    def get_flux2_config(self, diffusion_model: str, vae: str, text_encoder: str, shift: int = 0) -> Tuple[dict]:
         try:
-            if not diffusers_path.strip():
-                return ("diffusers_path不能为空",)
+            if not diffusion_model.strip():
+                return ({"error": "diffusion_model不能为空"},)
             
-            normalized_path = normalize_windows_path(diffusers_path.strip())
+            if not vae.strip():
+                return ({"error": "vae不能为空"},)
             
-            return (normalized_path,)
+            if not text_encoder.strip():
+                return ({"error": "text_encoder不能为空"},)
+            
+            normalized_diffusion_model = normalize_windows_path(diffusion_model.strip())
+            normalized_vae = normalize_windows_path(vae.strip())
+            normalized_text_encoder = normalize_windows_path(text_encoder.strip())
+            
+            config = {
+                "type": "flux2",
+                "diffusion_model": normalized_diffusion_model,
+                "vae": normalized_vae,
+                "shift": shift,
+                "text_encoders": [
+                    {"path": normalized_text_encoder, "type": "flux2"}
+                ],
+            }
+            
+            return (config,)
             
         except Exception as e:
-            return (str(e),)    
+            return ({"error": str(e)},) 
 
 
 

@@ -30,6 +30,8 @@ Diffusion-Pipe In ComfyUI Custom Node is a powerful extension plugin that provid
 
 
 ## update
+* 20260117: flux2 support, and follow the super huge update of the original project，deepspeed updated，comfyui submodules updated 
+
 * 20260103: add qwen2512 support, same as qwen_image
 
 * 20260102: qwen2511 support, supports both Diffusers and ComfyUI format models
@@ -248,6 +250,7 @@ This plugin supports over 20 of the latest Diffusion models, including:
 |Z-Image         |✅    |✅              |❌                |
 |HunyuanVideo-1.5|✅    |✅              |✅                |
 |Qwen-Image-Edit-2511 |✅    |✅              |✅                |
+|Flux 2（both dev and klein）          |✅    |✅              |✅                |
 
 
 ## License
